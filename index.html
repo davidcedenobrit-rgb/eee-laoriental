@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ── SEO ── -->
+  <title>EEE · La Oriental Automotors | MG & Maxus en Maturín</title>
+  <meta name="description" content="Experiencia Exclusiva La Oriental Automotors. Conoce los modelos MG y Maxus disponibles en Maturín y los planes especiales de financiamiento para invitados." />
+  <meta property="og:title" content="EEE · La Oriental Automotors" />
+  <meta property="og:description" content="Una experiencia exclusiva para conocer el respaldo internacional de MG y Maxus, sus modelos destacados y los planes especiales de financiamiento." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://placehold.co/1200x630/070A12/ffffff?text=La+Oriental+Automotors" />
+
+  <!-- ── Google Fonts ── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- ── Tailwind CDN ── -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            night:   '#070A12',
+            glass:   'rgba(255,255,255,0.04)',
+            mgred:   '#D91C24',
+            mgdark:  '#8B0000',
+            mxblue:  '#0D2557',
+            mxlight: '#1A3A7C',
+            mxsilver:'#8EAACB',
+            gold:    '#C8973A',
+            goldlt:  '#E8B96A',
+          },
+          fontFamily: { inter: ['Inter', 'sans-serif'] },
+          backdropBlur: { xs: '2px' },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ── Reset / Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #070A12;
+      font-family: 'Inter', sans-serif;
+      color: #E2E8F0;
+      overflow-x: hidden;
+    }
+
+    /* ── Grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Navbar ── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      transition: background 0.4s, box-shadow 0.4s;
+    }
+    #navbar.scrolled {
+      background: rgba(7,10,18,0.92);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    /* ── Glass card ── */
+    .glass {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+    }
+    .glass-mg {
+      background: rgba(217,28,36,0.07);
+      border: 1px solid rgba(217,28,36,0.2);
+      border-radius: 16px;
+    }
+    .glass-mx {
+      background: rgba(13,37,87,0.18);
+      border: 1px solid rgba(26,58,124,0.4);
+      border-radius: 16px;
+    }
+
+    /* ── Gradient texts ── */
+    .text-mg-grad {
+      background: linear-gradient(135deg, #FF4B55, #D91C24, #8B0000);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-mx-grad {
+      background: linear-gradient(135deg, #8EAACB, #4A7BB5, #0D2557);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .text-gold-grad {
+      background: linear-gradient(135deg, #E8B96A, #C8973A, #9A6D1F);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Vehicle scroll ── */
+    .vehicles-track {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 8px 4px 32px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(200,151,58,0.3) transparent;
+    }
+    .vehicles-track::-webkit-scrollbar { height: 4px; }
+    .vehicles-track::-webkit-scrollbar-track { background: transparent; }
+    .vehicles-track::-webkit-scrollbar-thumb { background: rgba(200,151,58,0.4); border-radius: 4px; }
+
+    .vehicle-card {
+      flex: 0 0 calc(100vw - 64px);
+      max-width: 900px;
+      scroll-snap-align: start;
+      border-radius: 24px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 440px;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .vehicle-card:hover { box-shadow: 0 0 40px rgba(200,151,58,0.08); }
+    .vehicle-card.mg-card {
+      background: linear-gradient(135deg, rgba(139,0,0,0.12) 0%, rgba(7,10,18,0.95) 60%);
+      border-color: rgba(217,28,36,0.2);
+    }
+    .vehicle-card.mx-card {
+      background: linear-gradient(135deg, rgba(13,37,87,0.3) 0%, rgba(7,10,18,0.95) 60%);
+      border-color: rgba(26,58,124,0.3);
+    }
+
+    .vehicle-image-wrap {
+      position: relative;
+      overflow: hidden;
+      min-height: 300px;
+    }
+    .vehicle-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .vehicle-card:hover .vehicle-image-wrap img { transform: scale(1.04); }
+
+    .vehicle-info {
+      padding: 36px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* ── Benefit bullet ── */
+    .benefit-item::before {
+      content: '';
+      display: inline-block; width: 6px; height: 6px;
+      border-radius: 50%; margin-right: 10px; flex-shrink: 0; margin-top: 6px;
+    }
+    .mg-bullet::before { background: #D91C24; }
+    .mx-bullet::before { background: #4A7BB5; }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 14px;
+      transition: all 0.25s; cursor: pointer; border: none; text-decoration: none;
+      background: linear-gradient(135deg, #D91C24, #8B0000);
+      color: #fff;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(217,28,36,0.4); }
+
+    .btn-mx {
+      background: linear-gradient(135deg, #1A3A7C, #0D2557);
+      color: #fff;
+    }
+    .btn-mx:hover { box-shadow: 0 8px 24px rgba(13,37,87,0.5); }
+
+    .btn-gold {
+      background: linear-gradient(135deg, #E8B96A, #C8973A);
+      color: #070A12;
+    }
+    .btn-gold:hover { box-shadow: 0 8px 24px rgba(200,151,58,0.4); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.8);
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); }
+
+    .btn-ghost {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.75);
+      font-size: 13px;
+      padding: 9px 16px;
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    .btn-wa {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+    }
+    .btn-wa:hover { box-shadow: 0 8px 24px rgba(37,211,102,0.35); }
+
+    /* ── Finance cards ── */
+    .finance-card {
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.03);
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    .finance-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(200,151,58,0.25);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+    }
+
+    /* ── Modal ── */
+    #modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center;
+    }
+    #modal-overlay.active { display: flex; }
+    #modal-box {
+      background: #0D1220;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 40px 36px;
+      max-width: 480px; width: 90%;
+      text-align: center;
+      animation: modalIn 0.3s ease;
+    }
+    @keyframes modalIn { from { opacity:0; transform:scale(0.92) translateY(16px); } to { opacity:1; transform:scale(1) translateY(0); } }
+
+    /* ── Hero glow ── */
+    .hero-glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* ── Scroll animations ── */
+    .fade-up { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 100px; font-size: 11px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .badge-gold { background: rgba(200,151,58,0.15); border: 1px solid rgba(200,151,58,0.35); color: #E8B96A; }
+    .badge-mg   { background: rgba(217,28,36,0.12); border: 1px solid rgba(217,28,36,0.3); color: #FF6B72; }
+    .badge-mx   { background: rgba(74,123,181,0.12); border: 1px solid rgba(74,123,181,0.3); color: #8EAACB; }
+
+    /* ── Section number ghost ── */
+    .section-number {
+      position: absolute; font-size: 180px; font-weight: 900;
+      color: rgba(255,255,255,0.015); line-height: 1;
+      top: -30px; left: -10px; pointer-events: none; user-select: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .vehicle-card {
+        flex: 0 0 calc(100vw - 40px);
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+      .vehicle-image-wrap { min-height: 220px; }
+      .vehicle-info { padding: 24px 20px; }
+      .section-number { font-size: 80px; }
+    }
+    @media (max-width: 640px) {
+      .vehicles-track { gap: 16px; padding: 4px 0 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     NAVBAR
+══════════════════════════════════ -->
+<nav id="navbar" class="px-6 py-4">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <!-- Logo / Nombre -->
+    <div class="flex items-center gap-3">
+      <!-- ✏️ EDITABLE: reemplaza el div rojo con <img src="URL_LOGO_LA_ORIENTAL" class="h-8 w-auto" /> -->
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#D91C24,#8B0000)">
+        <span class="text-white font-black text-[10px]">LO</span>
+      </div>
+      <div>
+        <p class="text-white font-bold text-sm leading-tight">LA ORIENTAL</p>
+        <p class="text-xs font-medium" style="color:#8EAACB;letter-spacing:0.15em">AUTOMOTORS · MG & MAXUS</p>
+      </div>
+    </div>
+
+    <!-- Links desktop -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#marcas" class="text-sm text-slate-400 hover:text-white transition-colors">Las marcas</a>
+      <a href="#vehiculos" class="text-sm text-slate-400 hover:text-white transition-colors">Vehículos</a>
+      <a href="#financiamiento" class="text-sm text-slate-400 hover:text-white transition-colors">Financiamiento</a>
+    </div>
+
+    <!-- CTA nav -->
+    <a href="https://wa.me/584149989010?text=Hola%20👋%20Vengo%20de%20la%20experiencia%20especial%20de%20La%20Oriental%20Automotors%20y%20me%20gustaría%20recibir%20información."
+       target="_blank"
+       class="hidden md:inline-flex items-center gap-2 btn-primary text-sm py-2.5 px-5">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.112 1.523 5.84L0 24l6.335-1.506A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.954 0-3.78-.526-5.348-1.442l-.383-.228-3.762.894.952-3.671-.249-.397A9.937 9.937 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      Consultar ahora
+    </a>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center pt-24 pb-20 px-6 overflow-hidden">
+
+  <!-- Imagen de fondo hero desde MG LATAM CDN -->
+  <div style="position:absolute;inset:0;z-index:0;">
+    <img src="https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/home/sliders/2025/06/la_20250623_170446_desktop_slider.webp"
+         alt="MG Hero"
+         style="width:100%;height:100%;object-fit:cover;opacity:0.12;"
+         onerror="this.style.display='none'" />
+    <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,10,18,0.97) 0%,rgba(7,10,18,0.85) 50%,rgba(7,10,18,0.97) 100%)"></div>
+  </div>
+
+  <!-- Glows de fondo -->
+  <div class="hero-glow w-96 h-96 opacity-20" style="background:#D91C24;top:-80px;left:-120px;"></div>
+  <div class="hero-glow w-80 h-80 opacity-15" style="background:#0D2557;bottom:-60px;right:-80px;"></div>
+  <div class="hero-glow w-64 h-64 opacity-10" style="background:#C8973A;top:40%;right:20%;"></div>
+
+  <div class="max-w-5xl mx-auto w-full relative z-10">
+
+    <!-- Badge superior -->
+    <div class="flex items-center gap-3 mb-8 fade-up">
+      <span class="badge badge-gold">
+        <span style="width:6px;height:6px;border-radius:50%;background:#E8B96A;display:inline-block;animation:pulse 2s infinite"></span>
+        Experiencia Exclusiva
+      </span>
+      <span class="badge badge-mg">MG</span>
+      <span class="badge badge-mx">Maxus</span>
+    </div>
+
+    <!-- Título -->
+    <h1 class="fade-up text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tight mb-6" style="transition-delay:0.1s">
+      Bienvenidos a la<br/>
+      <span class="text-gold-grad">EEE</span> de<br/>
+      <span class="text-white">La Oriental</span>
+      <span class="text-mg-grad"> Auto</span><span class="text-mx-grad">motors</span>
+    </h1>
+
+    <!-- Subtítulo -->
+    <p class="fade-up text-lg md:text-xl text-slate-400 max-w-2xl leading-relaxed mb-10" style="transition-delay:0.2s">
+      Una experiencia exclusiva para conocer el respaldo internacional de <strong class="text-white">MG</strong> y <strong class="text-white">Maxus</strong>, sus modelos destacados y los planes especiales de financiamiento disponibles para <em class="text-gold-grad font-semibold">invitados</em>.
+    </p>
+
+    <!-- Botones -->
+    <div class="fade-up flex flex-wrap gap-3 mb-16" style="transition-delay:0.3s">
+      <a href="#vehiculos" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Ver vehículos
+      </a>
+      <a href="#financiamiento" class="btn-primary btn-outline" style="background:transparent">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        Ver planes
+      </a>
+    </div>
+
+    <!-- Mini stats -->
+    <div class="fade-up grid grid-cols-2 md:grid-cols-4 gap-4" style="transition-delay:0.4s">
+      <div class="glass p-4 rounded-2xl text-center">
+        <p class="text-2xl font-black text-white">6+</p>
+        <p class="text-xs text-slate-400 mt-1">Modelos disponibles</p>
+      </div>
+      <div class="glass p-4 rounded-2xl text-center">
+        <p class="text-2xl font-black text-gold-grad">2</p>
+        <p class="text-xs text-slate-400 mt-1">Marcas internacionales</p>
+      </div>
+      <div class="glass p-4 rounded-2xl text-center">
+        <p class="text-2xl font-black text-white">100</p>
+        <p class="text-xs text-slate-400 mt-1">Años de historia MG</p>
+      </div>
+      <div class="glass p-4 rounded-2xl text-center">
+        <p class="text-2xl font-black text-mg-grad">∞</p>
+        <p class="text-xs text-slate-400 mt-1">Respaldo SAIC Motor</p>
+      </div>
+    </div>
+
+    <!-- Logos de marcas -->
+    <div class="fade-up flex items-center gap-6 mt-10" style="transition-delay:0.5s">
+      <p class="text-xs text-slate-600 uppercase tracking-widest">Marcas oficiales:</p>
+      <!-- ✏️ EDITABLE: reemplaza con imágenes reales de los logos -->
+      <div class="flex items-center gap-4">
+        <div class="glass px-5 py-2.5 rounded-xl">
+          <span class="font-black text-lg text-mg-grad tracking-widest">MG</span>
+        </div>
+        <div class="glass px-5 py-2.5 rounded-xl">
+          <span class="font-black text-lg text-mx-grad tracking-widest">MAXUS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+    <p class="text-xs text-slate-500 tracking-widest uppercase">Desliza</p>
+    <div class="w-px h-10 bg-gradient-to-b from-slate-500 to-transparent"></div>
+  </div>
+</section>
+
+
+<div class="divider mx-6"></div>
+
+
+<!-- ══════════════════════════════════
+     HISTORIA DE MARCAS
+══════════════════════════════════ -->
+<section id="marcas" class="px-6 py-24 max-w-7xl mx-auto">
+  <div class="relative">
+    <span class="section-number">01</span>
+    <div class="text-center mb-14 fade-up">
+      <span class="badge badge-gold mb-4">Las marcas</span>
+      <h2 class="text-3xl md:text-5xl font-black text-white mt-3">Historia &amp; Respaldo internacional</h2>
+      <p class="text-slate-400 mt-4 max-w-xl mx-auto">Dos marcas con historia, tecnología y presencia global disponibles ahora en Maturín.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+      <!-- MG Card -->
+      <div class="glass-mg p-8 md:p-10 rounded-3xl fade-up" style="transition-delay:0.1s">
+        <div class="flex items-start gap-4 mb-6">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#D91C24,#8B0000)">
+            <span class="font-black text-white text-xl">MG</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white">MG Motor</h3>
+            <p class="text-sm text-red-300 font-medium mt-0.5">Desde 1924 · Herencia británica</p>
+          </div>
+        </div>
+        <p class="text-slate-300 leading-relaxed text-[15px]">
+          MG es una marca con historia desde 1924, reconocida por su <strong class="text-white">herencia británica</strong>, espíritu deportivo y evolución hacia vehículos modernos, tecnológicos y accesibles para nuevos mercados internacionales. Hoy MG combina diseño, seguridad, innovación y una propuesta atractiva para quienes buscan un vehículo con <em class="text-mg-grad font-semibold">personalidad y respaldo global</em>.
+        </p>
+        <!-- Imagen highlight MG -->
+        <div class="mt-6 rounded-2xl overflow-hidden" style="height:160px">
+          <img src="https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/pdp/MG-ZS/IMG/la_20250623_174224_mg-zs.webp.webp"
+               alt="MG ZS" style="width:100%;height:100%;object-fit:cover;object-position:center"
+               onerror="this.parentElement.style.display='none'" />
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="badge badge-mg">Good Design Award</span>
+          <span class="badge badge-mg">Seguridad 5★</span>
+          <span class="badge badge-mg">MG Pilot</span>
+        </div>
+      </div>
+
+      <!-- Maxus Card -->
+      <div class="glass-mx p-8 md:p-10 rounded-3xl fade-up" style="transition-delay:0.2s">
+        <div class="flex items-start gap-4 mb-6">
+          <div class="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#1A3A7C,#0D2557)">
+            <span class="font-bold text-white text-sm tracking-wider">MAX</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-white">Maxus</h3>
+            <p class="text-sm font-medium mt-0.5" style="color:#8EAACB">SAIC Motor · Potencia &amp; Versatilidad</p>
+          </div>
+        </div>
+        <p class="text-slate-300 leading-relaxed text-[15px]">
+          Maxus es una marca respaldada por <strong class="text-white">SAIC Motor</strong>, con origen vinculado a la experiencia de LDV en vehículos comerciales y de pasajeros. Su propuesta combina espacio, potencia, tecnología y versatilidad, con modelos pensados para <em class="text-mx-grad font-semibold">familias, empresas y usuarios</em> que necesitan comodidad, capacidad y presencia.
+        </p>
+        <!-- ✏️ EDITABLE: reemplaza con imagen real del Maxus D90 o D60 -->
+        <div class="mt-6 rounded-2xl overflow-hidden flex items-center justify-center" style="height:160px;background:linear-gradient(135deg,rgba(13,37,87,0.4),rgba(7,10,18,0.8))">
+          <p class="text-slate-500 text-sm italic">Imagen Maxus próximamente</p>
+        </div>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <span class="badge badge-mx">SAIC Motor</span>
+          <span class="badge badge-mx">7 pasajeros</span>
+          <span class="badge badge-mx">Versatilidad total</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="divider mx-6"></div>
+
+
+<!-- ══════════════════════════════════
+     VEHÍCULOS
+══════════════════════════════════ -->
+<section id="vehiculos" class="py-24 overflow-hidden">
+  <div class="px-6 max-w-7xl mx-auto mb-10">
+    <div class="relative">
+      <span class="section-number">02</span>
+      <div class="fade-up">
+        <span class="badge badge-gold mb-4">Catálogo</span>
+        <h2 class="text-3xl md:text-5xl font-black text-white mt-3">Modelos disponibles</h2>
+        <p class="text-slate-400 mt-4 max-w-xl">Desliza para explorar cada modelo. Haz clic en <em>Ficha técnica</em> o <em>Video</em> para más detalles.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Track de scroll horizontal -->
+  <div class="px-6">
+    <div class="vehicles-track" id="vehicles-track">
+      <!-- Las fichas se generan con JS -->
+    </div>
+  </div>
+
+  <!-- Paginación dots -->
+  <div class="flex justify-center gap-2 mt-2 px-6" id="vehicles-dots"></div>
+</section>
+
+
+<div class="divider mx-6"></div>
+
+
+<!-- ══════════════════════════════════
+     FINANCIAMIENTO
+══════════════════════════════════ -->
+<section id="financiamiento" class="px-6 py-24 max-w-7xl mx-auto">
+  <div class="relative">
+    <span class="section-number">03</span>
+    <div class="text-center mb-14 fade-up">
+      <span class="badge badge-gold mb-4">Financiamiento</span>
+      <h2 class="text-3xl md:text-5xl font-black text-white mt-3">Planes especiales<br/><span class="text-gold-grad">La Oriental Automotors</span></h2>
+      <p class="text-slate-400 mt-5 max-w-2xl mx-auto text-base leading-relaxed">
+        Opciones diseñadas para que puedas iniciar tu compra con mayor flexibilidad, bajo condiciones especiales disponibles para <strong class="text-white">invitados de esta experiencia</strong>.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5 mb-10">
+
+      <!-- Card 1 -->
+      <div class="finance-card fade-up" style="transition-delay:0.1s">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(200,151,58,0.2),rgba(200,151,58,0.05));border:1px solid rgba(200,151,58,0.25)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8B96A" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3">Financiamiento de inicial</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          La Oriental Automotors puede ofrecer opciones especiales para <strong class="text-white">financiar la inicial</strong> del vehículo, según evaluación y condiciones aprobadas por la directiva.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="finance-card fade-up" style="transition-delay:0.2s">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(217,28,36,0.15),rgba(217,28,36,0.04));border:1px solid rgba(217,28,36,0.2)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF6B72" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3">Plan de cuotas del vehículo</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          El monto restante del vehículo puede organizarse en <strong class="text-white">cuotas según el modelo</strong> seleccionado y el plan aprobado.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="finance-card fade-up" style="transition-delay:0.3s">
+        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(74,123,181,0.2),rgba(74,123,181,0.04));border:1px solid rgba(74,123,181,0.25)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8EAACB" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3">Atención personalizada</h3>
+        <p class="text-slate-400 text-sm leading-relaxed">
+          Un asesor de La Oriental Automotors puede ayudarte a revisar el <strong class="text-white">modelo de tu interés</strong>, disponibilidad, colores y plan más conveniente.
+        </p>
+      </div>
+    </div>
+
+    <!-- Nota legal -->
+    <div class="fade-up glass rounded-2xl px-6 py-4 flex items-start gap-3 max-w-3xl mx-auto">
+      <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8EAACB" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p class="text-xs text-slate-500 leading-relaxed">
+        Información referencial sujeta a aprobación, disponibilidad del vehículo y condiciones vigentes de La Oriental Automotors. No incluye IVA, placa, seguro ni gastos administrativos, salvo que se indique expresamente.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<div class="divider mx-6"></div>
+
+
+<!-- ══════════════════════════════════
+     CTA FINAL
+══════════════════════════════════ -->
+<section class="px-6 py-28 text-center relative overflow-hidden">
+  <!-- Glow bg -->
+  <div class="hero-glow w-96 h-96 opacity-15" style="background:linear-gradient(135deg,#D91C24,#0D2557);top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+
+  <div class="max-w-2xl mx-auto relative z-10">
+    <div class="fade-up">
+      <span class="badge badge-gold mb-6">¿Todo listo?</span>
+      <h2 class="text-3xl md:text-5xl font-black text-white mt-4 mb-5 leading-tight">
+        ¿Listo para elegir tu próximo<br/>
+        <span class="text-mg-grad">MG</span> o <span class="text-mx-grad">Maxus</span>?
+      </h2>
+      <p class="text-slate-400 text-lg mb-10 leading-relaxed">
+        Conoce el modelo ideal para ti y recibe atención personalizada de nuestro equipo.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-3">
+        <!-- WhatsApp con modelo genérico -->
+        <a href="https://wa.me/584149989010?text=Hola%20👋%20Vengo%20de%20la%20experiencia%20especial%20de%20La%20Oriental%20Automotors%20y%20estoy%20interesado%20en%20recibir%20información%20sobre%20sus%20modelos%20y%20planes%20de%20financiamiento."
+           target="_blank"
+           class="btn-primary btn-wa text-sm py-3.5 px-7">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.112 1.523 5.84L0 24l6.335-1.506A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.954 0-3.78-.526-5.348-1.442l-.383-.228-3.762.894.952-3.671-.249-.397A9.937 9.937 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Hablar por WhatsApp
+        </a>
+        <a href="#vehiculos" class="btn-primary btn-outline text-sm py-3.5 px-7">
+          Ver vehículos
+        </a>
+        <a href="#financiamiento" class="btn-primary btn-outline text-sm py-3.5 px-7">
+          Ver planes
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     FOOTER
+══════════════════════════════════ -->
+<footer class="px-6 py-10 border-t border-white/[0.06]">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#D91C24,#8B0000)">
+        <span class="text-white font-black text-[10px]">LO</span>
+      </div>
+      <div>
+        <p class="text-white font-bold text-sm">LA ORIENTAL AUTOMOTORS</p>
+        <p class="text-xs text-slate-600">MG &amp; Maxus · Maturín, Venezuela</p>
+      </div>
+    </div>
+    <p class="text-xs text-slate-600 text-center">
+      © 2025 La Oriental Automotors · Experiencia Exclusiva EEE
+    </p>
+    <div class="flex items-center gap-1 text-xs text-slate-700">
+      <span class="badge badge-mg" style="font-size:9px">MG</span>
+      <span class="badge badge-mx" style="font-size:9px">Maxus</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ══════════════════════════════════
+     MODAL GENÉRICO
+══════════════════════════════════ -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <div id="modal-icon" class="w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center" style="background:rgba(200,151,58,0.1);border:1px solid rgba(200,151,58,0.25)">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#E8B96A" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    </div>
+    <h3 id="modal-title" class="text-xl font-bold text-white mb-3">Próximamente</h3>
+    <p id="modal-text" class="text-slate-400 text-sm leading-relaxed mb-7">Este contenido estará disponible pronto.</p>
+    <button onclick="closeModal()" class="btn-primary btn-outline w-full justify-center text-sm">Cerrar</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     GALLERY MODAL
+══════════════════════════════════ -->
+<div id="gallery-overlay" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column">
+  <!-- Close -->
+  <button onclick="closeGallery()" style="position:absolute;top:20px;right:24px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:50%;width:40px;height:40px;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">✕</button>
+
+  <!-- Header -->
+  <div style="text-align:center;margin-bottom:20px;padding:0 60px">
+    <p id="gallery-brand" style="font-size:10px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#94a3b8;margin-bottom:4px"></p>
+    <h3 id="gallery-model" style="font-size:22px;font-weight:900;color:#fff"></h3>
+  </div>
+
+  <!-- Main image -->
+  <div style="position:relative;width:100%;max-width:860px;padding:0 56px">
+    <img id="gallery-main-img" src="" alt="" style="width:100%;border-radius:16px;object-fit:cover;max-height:480px;display:block;background:#0d1220" />
+
+    <!-- Prev -->
+    <button onclick="galleryNav(-1)" style="position:absolute;left:0;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">‹</button>
+
+    <!-- Next -->
+    <button onclick="galleryNav(1)" style="position:absolute;right:0;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">›</button>
+  </div>
+
+  <!-- Counter -->
+  <p id="gallery-counter" style="font-size:12px;color:#64748b;margin-top:14px"></p>
+
+  <!-- Thumbnails -->
+  <div id="gallery-thumbs" style="display:flex;gap:10px;margin-top:16px;padding:0 16px;overflow-x:auto;max-width:900px"></div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════ -->
+<script>
+/* ──────────────────────────────────
+   ✏️ EDITABLE: Array de vehículos
+   Reemplaza los valores "PEGAR_LINK_..." con tus URLs reales.
+   imageUrl     → URL directa de la imagen del vehículo
+   fichaTecnicaUrl → PDF, página, Drive, etc. (null = modal "próximamente")
+   videoUrl        → URL YouTube o cualquier video (null = modal "próximamente")
+────────────────────────────────── */
+const vehicles = [
+  {
+    brand: "MG",
+    model: "MG3",
+    type: "Hatchback",
+    // ✏️ Transmisiones disponibles en este modelo (se muestran como badges seleccionables)
+    transmissions: ["Automático", "Sincrónico"],
+    imageUrl: "https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/pdp/MG-3/2025/IMG/la_20250623_174610_mg-3-ice.webp.webp",
+    headline: "Estilo urbano, tecnología conectada y la libertad de elegir tu transmisión.",
+    benefits: [
+      "Disponible automático CVT o sincrónico 5 vel.",
+      "Diseño juvenil y aerodinámico",
+      "Pantalla táctil con conectividad",
+      "Ideal para el día a día en ciudad"
+    ],
+    // ✏️ Agrega URLs reales de fotos adicionales (mínimo 4)
+    photos: [
+      "https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/pdp/MG-3/2025/IMG/la_20250623_174610_mg-3-ice.webp.webp",
+      "https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/pdp/MG-3/IMG/la_20250623_173856_mg-3.webp.webp",
+      "https://placehold.co/900x560/1a0505/D91C24?text=MG3+Interior",
+      "https://placehold.co/900x560/1a0505/D91C24?text=MG3+Detalle"
+    ],
+    fichaTecnicaUrl: "https://www.mgmotorlatam.com/model/MG-3",
+    videoUrl: null
+  },
+  {
+    brand: "Maxus",
+    model: "Maxus D60",
+    type: "SUV",
+    transmissions: ["Automático"],
+    // ✏️ Reemplaza con imagen real del D60 cuando la tengas
+    imageUrl: "https://placehold.co/900x560/050e1f/4A7BB5?text=Maxus+D60",
+    headline: "SUV familiar con espacio, presencia y equipamiento de alto nivel.",
+    benefits: [
+      "Diseño robusto y elegante",
+      "Cabina amplia de 5 puestos",
+      "Motor turbo de alto rendimiento",
+      "Ideal para familia y uso diario"
+    ],
+    photos: [
+      "https://placehold.co/900x560/050e1f/4A7BB5?text=Maxus+D60",
+      "https://placehold.co/900x560/050e1f/4A7BB5?text=D60+Interior",
+      "https://placehold.co/900x560/050e1f/4A7BB5?text=D60+Lateral",
+      "https://placehold.co/900x560/050e1f/4A7BB5?text=D60+Detalle"
+    ],
+    fichaTecnicaUrl: null,
+    videoUrl: null
+  },
+  {
+    brand: "MG",
+    model: "MG ZS Automática",
+    type: "SUV",
+    transmissions: ["Automático"],
+    imageUrl: "https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/pdp/MG-ZS/IMG/la_20250623_174224_mg-zs.webp.webp",
+    headline: "Vive las mejores aventuras con equipamiento de primera y estilo sport.",
+    benefits: [
+      "SUV compacta con gran espacio interior",
+      "Techo panorámico eléctrico",
+      "Sistema MG Pilot de asistencia",
+      "Transmisión automática CVT"
+    ],
+    photos: [
+      "https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/pdp/MG-ZS/IMG/la_20250623_174224_mg-zs.webp.webp",
+      "https://placehold.co/900x560/1a0505/D91C24?text=MG+ZS+Interior",
+      "https://placehold.co/900x560/1a0505/D91C24?text=MG+ZS+Lateral",
+      "https://placehold.co/900x560/1a0505/D91C24?text=MG+ZS+Detalle"
+    ],
+    fichaTecnicaUrl: "https://www.mgmotorlatam.com/model/MG-ZS",
+    videoUrl: null
+  },
+  {
+    brand: "Maxus",
+    model: "Maxus D90",
+    type: "SUV",
+    transmissions: ["Automático"],
+    // ✏️ Reemplaza con imagen real del D90 cuando la tengas
+    imageUrl: "https://placehold.co/900x560/050e1f/4A7BB5?text=Maxus+D90",
+    headline: "Una SUV grande, fuerte y preparada para grandes experiencias.",
+    benefits: [
+      "7 puestos — espacio sin compromisos",
+      "Presencia que se impone en cualquier ruta",
+      "Motor potente con tracción inteligente",
+      "Confort ejecutivo para toda la familia"
+    ],
+    photos: [
+      "https://placehold.co/900x560/050e1f/4A7BB5?text=Maxus+D90",
+      "https://placehold.co/900x560/050e1f/4A7BB5?text=D90+Interior",
+      "https://placehold.co/900x560/050e1f/4A7BB5?text=D90+Lateral",
+      "https://placehold.co/900x560/050e1f/4A7BB5?text=D90+7+Puestos"
+    ],
+    fichaTecnicaUrl: null,
+    videoUrl: null
+  },
+  {
+    brand: "MG",
+    model: "MG RX5",
+    type: "SUV",
+    transmissions: ["Automático"],
+    imageUrl: "https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/pdp/MG-RX5/IMG/la_20250623_174411_mg-rx5.webp.webp",
+    headline: "Deportividad inteligente y tecnología de vanguardia en un SUV premium.",
+    benefits: [
+      "Diseño sofisticado premiado internacionalmente",
+      "Interior amplio con acabados premium",
+      "Sistema multimedia de última generación",
+      "El balance perfecto entre estilo y espacio"
+    ],
+    photos: [
+      "https://mgmotors-prod-s3.s3.us-east-2.amazonaws.com/LA/pdp/MG-RX5/IMG/la_20250623_174411_mg-rx5.webp.webp",
+      "https://placehold.co/900x560/1a0505/D91C24?text=MG+RX5+Interior",
+      "https://placehold.co/900x560/1a0505/D91C24?text=MG+RX5+Lateral",
+      "https://placehold.co/900x560/1a0505/D91C24?text=MG+RX5+Detalle"
+    ],
+    fichaTecnicaUrl: "https://www.mgmotorlatam.com/model/MG-RX5",
+    videoUrl: null
+  }
+];
+
+/* ──────────────────────────────────
+   ✏️ EDITABLE: Número de WhatsApp
+   Formato: código país + número, sin + ni espacios
+────────────────────────────────── */
+const WA_NUMBER = '584149989010';
+
+/* ── Render de vehículos ── */
+function buildWaLink(model) {
+  const msg = encodeURIComponent(`Hola 👋 Vengo de la experiencia especial de La Oriental Automotors y estoy interesado en recibir información sobre el modelo ${model} y sus planes de financiamiento.`);
+  return `https://wa.me/${WA_NUMBER}?text=${msg}`;
+}
+
+function isMG(brand) { return brand === 'MG'; }
+
+function renderVehicles() {
+  const track = document.getElementById('vehicles-track');
+  const dotsContainer = document.getElementById('vehicles-dots');
+
+  vehicles.forEach((v, i) => {
+    const mg = isMG(v.brand);
+    const cardClass = mg ? 'mg-card' : 'mx-card';
+    const badgeClass = mg ? 'badge-mg' : 'badge-mx';
+    const bulletClass = mg ? 'mg-bullet' : 'mx-bullet';
+
+    const benefitsHTML = v.benefits.map(b => `
+      <li class="benefit-item ${bulletClass} flex items-start gap-2 text-sm text-slate-300">
+        <span>${b}</span>
+      </li>
+    `).join('');
+
+    // Transmisión: si tiene array lo muestra como badges múltiples, si no usa el campo legacy
+    const transArr = v.transmissions || (v.transmission ? [v.transmission] : []);
+    const transmissionBadges = transArr.map(t =>
+      `<span class="badge" style="background:rgba(0,0,0,0.5);border-color:rgba(255,255,255,0.15);color:rgba(255,255,255,0.7);font-size:10px">⚙ ${t}</span>`
+    ).join('');
+
+    // Botón "Ver más fotos" solo si hay photos
+    const hasPhotos = v.photos && v.photos.length > 0;
+    const photosBtnHtml = hasPhotos ? `
+      <button onclick="openGallery(${i})"
+              class="btn-primary btn-ghost text-xs py-2 px-3" style="border-color:rgba(255,255,255,0.2);color:#cbd5e1">
+        🖼 Ver más fotos
+      </button>` : '';
+
+    const card = document.createElement('div');
+    card.className = `vehicle-card ${cardClass}`;
+    card.innerHTML = `
+      <!-- Imagen -->
+      <div class="vehicle-image-wrap">
+        <img src="${v.imageUrl}" alt="${v.model}" loading="lazy"
+             onerror="this.src='https://placehold.co/700x440/0D1220/334155?text=${encodeURIComponent(v.model)}'" />
+        <div style="position:absolute;inset:0;background:linear-gradient(to right,transparent 60%,${mg?'rgba(139,0,0,0.4)':'rgba(13,37,87,0.5)'}100%)"></div>
+        <!-- Badge marca -->
+        <div style="position:absolute;top:16px;left:16px">
+          <span class="badge ${badgeClass}">${v.brand} · ${v.type}</span>
+        </div>
+        <!-- Transmisiones -->
+        <div style="position:absolute;bottom:16px;left:16px;display:flex;gap:6px;flex-wrap:wrap">
+          ${transmissionBadges}
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="vehicle-info">
+        <div>
+          <p class="text-xs font-semibold tracking-widest uppercase mb-2" style="color:${mg?'#FF6B72':'#8EAACB'}">${v.brand}</p>
+          <h3 class="text-2xl font-black text-white mb-2">${v.model}</h3>
+          <p class="text-slate-400 text-sm mb-6 leading-relaxed">${v.headline}</p>
+          <ul class="space-y-2 mb-7">${benefitsHTML}</ul>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="handleFicha('${v.fichaTecnicaUrl}','${v.model}')"
+                  class="btn-primary ${cardClass === 'mg-card' ? '' : 'btn-mx'} btn-ghost text-xs py-2 px-3">
+            📄 Ficha técnica
+          </button>
+          <button onclick="handleVideo('${v.videoUrl}','${v.model}')"
+                  class="btn-primary btn-ghost text-xs py-2 px-3">
+            ▶ Video
+          </button>
+          ${photosBtnHtml}
+          <a href="${buildWaLink(v.model)}" target="_blank"
+             class="btn-primary btn-wa text-xs py-2 px-3">
+            💬 WhatsApp
+          </a>
+        </div>
+      </div>
+    `;
+    track.appendChild(card);
+
+    // Dot
+    const dot = document.createElement('button');
+    dot.className = `w-2 h-2 rounded-full transition-all ${i === 0 ? 'bg-white w-5' : 'bg-slate-600'}`;
+    dot.onclick = () => scrollToCard(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  // Actualizar dots al hacer scroll
+  track.addEventListener('scroll', () => {
+    const idx = Math.round(track.scrollLeft / track.clientWidth);
+    document.querySelectorAll('#vehicles-dots button').forEach((d, i) => {
+      d.className = `h-2 rounded-full transition-all ${i === idx ? 'w-5 bg-white' : 'w-2 bg-slate-600'}`;
+    });
+  });
+}
+
+function scrollToCard(i) {
+  const track = document.getElementById('vehicles-track');
+  const card = track.children[i];
+  track.scrollTo({ left: card.offsetLeft - 24, behavior: 'smooth' });
+}
+
+/* ── Ficha técnica ── */
+function handleFicha(url, model) {
+  if (!url || url === 'null' || url.includes('PEGAR_LINK')) {
+    showModal(
+      '📄',
+      'Ficha técnica próximamente',
+      `La ficha técnica del <strong style="color:#fff">${model}</strong> estará disponible muy pronto. Mientras tanto puedes consultar directamente con nuestro equipo por WhatsApp.`,
+      model
+    );
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+/* ── Video ── */
+function handleVideo(url, model) {
+  if (!url || url === 'null' || url.includes('PEGAR_LINK')) {
+    showModal(
+      '▶',
+      'Video próximamente',
+      `El video de presentación del <strong style="color:#fff">${model}</strong> estará disponible muy pronto. Contáctanos para recibir información completa.`,
+      model
+    );
+  } else {
+    // YouTube embed en modal
+    const ytId = extractYouTubeId(url);
+    if (ytId) {
+      showVideoModal(ytId, model);
+    } else {
+      window.open(url, '_blank');
+    }
+  }
+}
+
+function extractYouTubeId(url) {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+  return match ? match[1] : null;
+}
+
+function showVideoModal(ytId, model) {
+  const overlay = document.getElementById('modal-overlay');
+  const box = document.getElementById('modal-box');
+  box.style.maxWidth = '720px';
+  box.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:16px;font-weight:700;color:#fff">${model}</h3>
+      <button onclick="closeModal()" style="color:#64748b;background:none;border:none;cursor:pointer;font-size:20px">✕</button>
+    </div>
+    <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden">
+      <iframe src="https://www.youtube.com/embed/${ytId}?autoplay=1" frameborder="0" allowfullscreen
+        style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe>
+    </div>
+  `;
+  overlay.classList.add('active');
+}
+
+/* ── Modal genérico ── */
+function showModal(icon, title, text, model) {
+  const waLink = buildWaLink(model);
+  document.getElementById('modal-icon').innerHTML = `<span style="font-size:28px">${icon}</span>`;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-text').innerHTML = text;
+
+  const box = document.getElementById('modal-box');
+  box.style.maxWidth = '480px';
+  box.innerHTML = `
+    <div id="modal-icon" class="w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center" style="background:rgba(200,151,58,0.1);border:1px solid rgba(200,151,58,0.25);font-size:28px">${icon}</div>
+    <h3 class="text-xl font-bold text-white mb-3">${title}</h3>
+    <p class="text-sm leading-relaxed mb-7" style="color:#94a3b8">${text}</p>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a href="${waLink}" target="_blank"
+         class="btn-primary btn-wa w-full justify-center text-sm" style="display:flex;align-items:center;gap:8px;justify-content:center">
+        💬 Consultar por WhatsApp
+      </a>
+      <button onclick="closeModal()" class="btn-primary btn-outline w-full justify-center text-sm" style="display:flex;align-items:center;justify-content:center">
+        Cerrar
+      </button>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+}
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+
+/* ── Gallery ── */
+let _galleryVehicleIdx = 0;
+let _galleryPhotoIdx = 0;
+
+function openGallery(vehicleIndex) {
+  const v = vehicles[vehicleIndex];
+  if (!v || !v.photos || v.photos.length === 0) return;
+  _galleryVehicleIdx = vehicleIndex;
+  _galleryPhotoIdx = 0;
+
+  // Header
+  document.getElementById('gallery-brand').textContent = v.brand;
+  document.getElementById('gallery-model').textContent = v.model;
+
+  // Thumbnails
+  const thumbsEl = document.getElementById('gallery-thumbs');
+  thumbsEl.innerHTML = '';
+  v.photos.forEach((url, idx) => {
+    const thumb = document.createElement('img');
+    thumb.src = url;
+    thumb.alt = `${v.model} foto ${idx + 1}`;
+    thumb.style.cssText = `width:80px;height:52px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid ${idx === 0 ? '#fff' : 'transparent'};opacity:${idx === 0 ? '1' : '0.5'};transition:all 0.2s;flex-shrink:0`;
+    thumb.onclick = () => setGalleryPhoto(idx);
+    thumbsEl.appendChild(thumb);
+  });
+
+  setGalleryPhoto(0);
+
+  const overlay = document.getElementById('gallery-overlay');
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function setGalleryPhoto(idx) {
+  const v = vehicles[_galleryVehicleIdx];
+  if (!v || !v.photos) return;
+  _galleryPhotoIdx = (idx + v.photos.length) % v.photos.length;
+
+  document.getElementById('gallery-main-img').src = v.photos[_galleryPhotoIdx];
+  document.getElementById('gallery-main-img').alt = `${v.model} foto ${_galleryPhotoIdx + 1}`;
+  document.getElementById('gallery-counter').textContent = `${_galleryPhotoIdx + 1} / ${v.photos.length}`;
+
+  // Highlight thumbnail
+  const thumbs = document.getElementById('gallery-thumbs').children;
+  Array.from(thumbs).forEach((t, i) => {
+    t.style.border = `2px solid ${i === _galleryPhotoIdx ? '#fff' : 'transparent'}`;
+    t.style.opacity = i === _galleryPhotoIdx ? '1' : '0.5';
+  });
+}
+
+function galleryNav(dir) {
+  setGalleryPhoto(_galleryPhotoIdx + dir);
+}
+
+function closeGallery() {
+  document.getElementById('gallery-overlay').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.getElementById('gallery-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('gallery-overlay')) closeGallery();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeGallery(); }
+  if (document.getElementById('gallery-overlay').style.display === 'flex') {
+    if (e.key === 'ArrowRight') galleryNav(1);
+    if (e.key === 'ArrowLeft') galleryNav(-1);
+  }
+});
+
+/* ── Navbar scroll ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+/* ── Scroll animations ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+/* ── Keyframes inline (pulse) ── */
+const style = document.createElement('style');
+style.textContent = `@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.65)} }`;
+document.head.appendChild(style);
+
+/* ── Init ── */
+renderVehicles();
+
+// Re-observar cards generadas dinámicamente
+setTimeout(() => {
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+}, 100);
+</script>
+
+</body>
+</html>
