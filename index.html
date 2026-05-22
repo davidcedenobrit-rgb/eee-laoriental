@@ -847,7 +847,7 @@ const vehicles = [
       "https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/6a1084cbc363506b9a9e9acc.webp"
     ],
     fichaTecnicaUrl: "https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69ed4ed005d419900198ec4e.jpg",
-    videoUrl: null
+    videoUrl: "https://www.youtube.com/shorts/li5aBbIRH6o"
   },
   {
     brand: "Maxus",
@@ -892,7 +892,7 @@ const vehicles = [
       "https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/6a1084ccb656b3edc443592e.webp"
     ],
     fichaTecnicaUrl: "https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69ed4f35b0e5e2bb7fc55c3a.jpg",
-    videoUrl: null
+    videoUrl: "https://www.youtube.com/shorts/Cz0CZkqnpZw"
   },
   {
     brand: "Maxus",
@@ -937,7 +937,7 @@ const vehicles = [
       "https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/6a1086646cc0eead5ca0f64f.jpg"
     ],
     fichaTecnicaUrl: "https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69ed4ecf9fe87a9994015d86.jpg",
-    videoUrl: null
+    videoUrl: "https://www.youtube.com/shorts/wsWfw7ywBl4"
   }
 ];
 
@@ -1087,7 +1087,7 @@ function handleVideo(url, model) {
 }
 
 function extractYouTubeId(url) {
-  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([^&\n?#]+)/);
   return match ? match[1] : null;
 }
 
