@@ -693,64 +693,276 @@
 
 
 <!-- ══════════════════════════════════
-     FINANCIAMIENTO
+     FINANCIAMIENTO — Plan Asegúrate $500
 ══════════════════════════════════ -->
 <section id="financiamiento" class="px-6 py-24 max-w-7xl mx-auto">
   <div class="relative">
     <span class="section-number">03</span>
-    <div class="text-center mb-14 fade-up">
+    <div class="text-center mb-10 fade-up">
       <span class="badge badge-gold mb-4">Financiamiento</span>
-      <h2 class="text-3xl md:text-5xl font-black text-white mt-3">Planes especiales<br/><span class="text-gold-grad">La Oriental Automotors</span></h2>
+      <h2 class="text-3xl md:text-5xl font-black text-white mt-3">Plan <span class="text-gold-grad">Asegúrate con $500</span></h2>
       <p class="text-slate-400 mt-5 max-w-2xl mx-auto text-base leading-relaxed">
-        Opciones diseñadas para que puedas iniciar tu compra con mayor flexibilidad, bajo condiciones especiales disponibles para <strong class="text-white">invitados de esta experiencia</strong>.
+        Asegura tu vehículo con <strong class="text-white">$500 de reserva</strong> y distribuye el resto en 6 cómodas cuotas. Condiciones exclusivas para los invitados de esta experiencia.
       </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-5 mb-10">
-
-      <!-- Card 1 -->
-      <div class="finance-card fade-up" style="transition-delay:0.1s">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(200,151,58,0.2),rgba(200,151,58,0.05));border:1px solid rgba(200,151,58,0.25)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E8B96A" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-        </div>
-        <h3 class="text-lg font-bold text-white mb-3">Financiamiento de inicial</h3>
-        <p class="text-slate-400 text-sm leading-relaxed">
-          La Oriental Automotors puede ofrecer opciones especiales para <strong class="text-white">financiar la inicial</strong> del vehículo, según evaluación y condiciones aprobadas por la directiva.
-        </p>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="finance-card fade-up" style="transition-delay:0.2s">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(217,28,36,0.15),rgba(217,28,36,0.04));border:1px solid rgba(217,28,36,0.2)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF6B72" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-        </div>
-        <h3 class="text-lg font-bold text-white mb-3">Plan de cuotas del vehículo</h3>
-        <p class="text-slate-400 text-sm leading-relaxed">
-          El monto restante del vehículo puede organizarse en <strong class="text-white">cuotas según el modelo</strong> seleccionado y el plan aprobado.
-        </p>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="finance-card fade-up" style="transition-delay:0.3s">
-        <div class="w-12 h-12 rounded-xl mb-5 flex items-center justify-center" style="background:linear-gradient(135deg,rgba(74,123,181,0.2),rgba(74,123,181,0.04));border:1px solid rgba(74,123,181,0.25)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8EAACB" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-        </div>
-        <h3 class="text-lg font-bold text-white mb-3">Atención personalizada</h3>
-        <p class="text-slate-400 text-sm leading-relaxed">
-          Un asesor de La Oriental Automotors puede ayudarte a revisar el <strong class="text-white">modelo de tu interés</strong>, disponibilidad, colores y plan más conveniente.
-        </p>
-      </div>
+    <!-- Filtros de marca -->
+    <div class="flex justify-center gap-3 mb-10 flex-wrap">
+      <button id="eeeALL" onclick="EEEPlan.setBrand('ALL')"
+        class="px-4 py-1.5 rounded-full text-xs font-semibold border transition-colors bg-white/10 text-white border-white/20 hover:border-white/40">
+        Todos
+      </button>
+      <button id="eeeMG" onclick="EEEPlan.setBrand('MG')"
+        class="px-4 py-1.5 rounded-full text-xs font-semibold border transition-colors bg-white/5 text-slate-400 border-white/10 hover:border-white/30">
+        MG
+      </button>
+      <button id="eeeMAXUS" onclick="EEEPlan.setBrand('MAXUS')"
+        class="px-4 py-1.5 rounded-full text-xs font-semibold border transition-colors bg-white/5 text-slate-400 border-white/10 hover:border-white/30">
+        Maxus
+      </button>
     </div>
+
+    <!-- Grid de vehículos -->
+    <div id="eeePlanGrid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10"></div>
 
     <!-- Nota legal -->
     <div class="fade-up glass rounded-2xl px-6 py-4 flex items-start gap-3 max-w-3xl mx-auto">
       <svg class="flex-shrink-0 mt-0.5" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8EAACB" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <p class="text-xs text-slate-500 leading-relaxed">
-        Información referencial sujeta a aprobación, disponibilidad del vehículo y condiciones vigentes de La Oriental Automotors. No incluye IVA, placa, seguro ni gastos administrativos, salvo que se indique expresamente.
+        Información referencial sujeta a aprobación, disponibilidad y condiciones vigentes. No incluye IVA, placa, seguro ni gastos administrativos, salvo indicación expresa. La Cuota 0 activa y asegura el plan. La última cuota puede cancelarse en Bs.
       </p>
     </div>
   </div>
 </section>
+
+<style>
+  .eee-plan-card {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform .3s, box-shadow .3s, border-color .3s;
+  }
+  .eee-plan-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,.4), 0 0 0 1px rgba(200,151,58,.15);
+    border-color: rgba(200,151,58,.2);
+  }
+  .eee-plan-card .epc-img {
+    width:100%; height:190px; object-fit:cover;
+    transition: transform .5s;
+  }
+  .eee-plan-card:hover .epc-img { transform: scale(1.05); }
+
+  .eee-sched-row {
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 12px; gap: 8px;
+  }
+  .eee-sched-row:last-child { border-bottom: none; }
+  .eee-sched-row .sr-l { color: #94a3b8; }
+  .eee-sched-row .sr-v { font-weight: 700; color: #fff; white-space: nowrap; }
+  .eee-sched-row.hl { background: rgba(200,151,58,0.08); margin: 0 -12px; padding: 5px 12px; border-radius: 6px; }
+  .eee-sched-row.hl .sr-l { color: #C8973A; font-weight: 600; }
+  .eee-sched-row.hl .sr-v { color: #E8B96A; }
+
+  .eee-total-strip {
+    display:flex; justify-content:space-between; align-items:center;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px; padding: 10px 14px; margin-top: 10px; gap: 8px;
+  }
+  .eee-total-strip .tsl { font-size:10px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:.6px; }
+  .eee-total-strip .tsv { font-size:17px; font-weight:800; color:#4ade80; white-space:nowrap; }
+
+  .eee-dot {
+    width:14px; height:14px; border-radius:999px;
+    border:1px solid rgba(255,255,255,0.18);
+    display:inline-block; cursor:pointer; flex-shrink:0;
+    transition: outline-offset .15s;
+  }
+  .eee-dot.active { outline: 2px solid #C8973A; outline-offset: 2px; }
+
+  .eee-btn-wa {
+    width:100%; background: linear-gradient(135deg,#D91C24,#8B0000);
+    color:#fff; font-weight:700; padding:11px; border-radius:12px;
+    border:none; cursor:pointer; font-size:13px; font-family:'Inter',sans-serif;
+    transition: transform .2s, box-shadow .2s;
+    display:flex; align-items:center; justify-content:center; gap:7px;
+  }
+  .eee-btn-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(217,28,36,.4); }
+
+  #eeePlanGrid .eee-filter-btn-active {
+    background: rgba(255,255,255,0.12) !important;
+    color: #fff !important;
+    border-color: rgba(255,255,255,0.3) !important;
+  }
+</style>
+
+<script>
+const EEEPlan = (() => {
+  const phone = "584149989010";
+  let brandFilter = "ALL";
+
+  const colorMap = {
+    blanco:"#ffffff", negro:"#111827", gris:"#9ca3af",
+    plata:"#d1d5db", rojo:"#ef4444", azul:"#3b82f6"
+  };
+
+  const selectedColor = {};
+
+  const cars = [
+    { id:"ep-mg5-mt",   brand:"MG",    model:"MG5 1.5L MT",       img:"https://storage.googleapis.com/msgsndr/XZDJ4aSOAL1crWRCXyY6/media/698a154c7305aac029fb1099.png",  colors:["plata","gris","negro","blanco"], note:"Sincrónico", reserva:500,c1:4497,c2:3747,c3:3747,c4:2248,c5:751,c6:3248,total:18738,entrega:6 },
+    { id:"ep-mg5-cvt",  brand:"MG",    model:"MG5 1.5L CVT COM",   img:"https://storage.googleapis.com/msgsndr/XZDJ4aSOAL1crWRCXyY6/media/698a154c7305aac029fb1099.png",  colors:["plata","gris","negro","blanco"], note:"Automático", reserva:500,c1:5637,c2:4697,c3:4697,c4:2818,c5:941,c6:3970,total:23260,entrega:6 },
+    { id:"ep-mg3-mt",   brand:"MG",    model:"MG3 1.5L MT STD",    img:"https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/6998655808245e7a96fd8a2d.png",       colors:["plata","gris","negro","blanco","rojo","azul"], note:"Sincrónico", reserva:500,c1:4605,c2:3837,c3:3837,c4:2302,c5:770,c6:3317,total:19168,entrega:6 },
+    { id:"ep-mg3-at",   brand:"MG",    model:"MG3 1.5L AT STD",    img:"https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69986679f83453f1b67b125c.png",       colors:["plata","gris","negro","blanco","rojo","azul"], note:"Automático", reserva:500,c1:5322,c2:4435,c3:4435,c4:2661,c5:887,c6:3771,total:22011,entrega:6 },
+    { id:"ep-zs-mt",    brand:"MG",    model:"MG ZS MT COM",       img:"https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69986711e92bc150fce37108.png",       colors:["plata","gris","negro","blanco","rojo"], note:"Sincrónico", reserva:500,c1:6516,c2:5430,c3:5430,c4:3258,c5:1086,c6:4527,total:26747,entrega:6 },
+    { id:"ep-zs-at",    brand:"MG",    model:"MG ZS AT COM",       img:"https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69986711e92bc150fce37108.png",       colors:["plata","gris","negro","blanco","rojo"], note:"Automático", reserva:500,c1:6657,c2:5547,c3:5547,c4:3328,c5:1111,c6:4616,total:27306,entrega:6 },
+    { id:"ep-rx5",      brand:"MG",    model:"MG RX5 1.5T DCT",    img:"https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/699862e0df9bdfc2e557da03.png",       colors:["gris","negro","blanco"], note:"Automático", reserva:500,c1:7575,c2:6312,c3:6312,c4:3787,c5:1265,c6:5198,total:30949,entrega:6 },
+    { id:"ep-rx9",      brand:"MG",    model:"MG RX9 2.0T AT 4WD", img:"https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/6989f524634d0acd9727ac78.png",       colors:["gris","plata","negro","blanco"], note:"4WD · Automático", reserva:500,c1:11997,c2:9997,c3:9997,c4:5999,c5:2000,c6:7998,total:48488,entrega:6 },
+    { id:"ep-d90",      brand:"MAXUS", model:"Maxus D90 AT",        img:"https://storage.googleapis.com/msgsndr/XZDJ4aSOAL1crWRCXyY6/media/6989fef0a41b87f9db120f3f.png",  colors:["plata","gris","negro","blanco"], note:"Automático", reserva:500,c1:12024,c2:10020,c3:10020,c4:6012,c5:2004,c6:8015,total:48595,entrega:6 },
+    { id:"ep-d90lux",   brand:"MAXUS", model:"Maxus D90 LUX 4x4",  img:"https://storage.googleapis.com/msgsndr/XZDJ4aSOAL1crWRCXyY6/media/6989fef0a41b87f9db120f3f.png",  colors:["plata","gris","negro","blanco"], note:"4WD · Automático", reserva:500,c1:13059,c2:10883,c3:10883,c4:6530,c5:2177,c6:8671,total:52703,entrega:6 },
+    { id:"ep-t60-4x4",  brand:"MAXUS", model:"T60 Comfort 4x4",    img:"https://storage.googleapis.com/msgsndr/XZDJ4aSOAL1crWRCXyY6/media/6989ff4d634d0a19f5298d48.png",  colors:["plata","gris","negro","blanco"], note:"4WD · Gasolina", reserva:500,c1:6597,c2:5498,c3:5498,c4:3299,c5:1100,c6:4778,total:27270,entrega:6 },
+    { id:"ep-t60-4x2",  brand:"MAXUS", model:"T60 Comfort 4x2",    img:"https://storage.googleapis.com/msgsndr/XZDJ4aSOAL1crWRCXyY6/media/6989ff4d0708e4facabdc3d3.png",  colors:["plata","gris","negro","blanco"], note:"2WD · Gasolina", reserva:500,c1:5814,c2:4845,c3:4845,c4:2907,c5:969,c6:4282,total:24162,entrega:6 },
+    { id:"ep-t70",      brand:"MAXUS", model:"T70 4x4 AT Double",   img:"https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69e39fed2c135a8c83163c29.png",       colors:["plata","gris","negro","blanco"], note:"4WD · Gasolina", reserva:500,c1:8157,c2:6798,c3:6798,c4:4079,c5:1360,c6:5766,total:33458,entrega:6 },
+    { id:"ep-t90",      brand:"MAXUS", model:"T90 4x4 Exe. Lux",   img:"https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69e39fed2c135a8c83163c29.png",       colors:["plata","gris","negro","blanco"], note:"4WD · Gasolina", reserva:500,c1:9504,c2:7920,c3:7920,c4:4752,c5:1584,c6:6619,total:38799,entrega:6 },
+    { id:"ep-s80",      brand:"MAXUS", model:"Maxus S80 Diesel",    img:"https://storage.googleapis.com/msgsndr/XZDJ4aSOAL1crWRCXyY6/media/6989fef07305aaa8c4f6970d.png",  colors:["blanco"], note:"Diesel · Chasis", reserva:500,c1:4380,c2:3650,c3:3650,c4:2190,c5:730,c6:3374,total:18474,entrega:6 },
+    { id:"ep-c300",     brand:"MAXUS", model:"Maxus C300 Chasis",   img:"https://storage.googleapis.com/msgsndr/XZDJ4aSOAL1crWRCXyY6/media/698a1620634d0a20172e1b52.png",  colors:["blanco"], note:"Chasis", reserva:500,c1:6663,c2:5553,c3:5553,c4:3332,c5:1111,c6:4820,total:27532,entrega:6 }
+  ];
+
+  function money(n) {
+    return "$ " + Number(n||0).toLocaleString("es-VE",{minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+  function cap(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
+
+  function schedule(car) {
+    const rows = [
+      { label:"Cuota 0 · Reserva", val:car.reserva, hl:true },
+      { label:"Cuota 1 · Día 0",   val:car.c1 },
+      { label:"Cuota 2 · Día 30",  val:car.c2 },
+      { label:"Cuota 3 · Día 60",  val:car.c3 },
+      { label:"Cuota 4 · Día 90",  val:car.c4 },
+      { label:"Cuota 5 · Día 120", val:car.c5 },
+      { label:"Cuota 6 · Día 150–180 <span style='background:rgba(74,222,128,.15);color:#4ade80;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px'>Entrega</span>", val:car.c6 }
+    ];
+    return rows.map(r=>`
+      <div class="eee-sched-row${r.hl?' hl':''}">
+        <span class="sr-l">${r.label}</span>
+        <span class="sr-v">${money(r.val)}</span>
+      </div>`).join('');
+  }
+
+  function setBrand(b) {
+    brandFilter = b;
+    ['ALL','MG','MAXUS'].forEach(x => {
+      const btn = document.getElementById('eee'+x);
+      if (!btn) return;
+      if (x === b) {
+        btn.style.background = 'rgba(255,255,255,0.12)';
+        btn.style.color = '#fff';
+        btn.style.borderColor = 'rgba(255,255,255,0.3)';
+      } else {
+        btn.style.background = 'rgba(255,255,255,0.05)';
+        btn.style.color = '#94a3b8';
+        btn.style.borderColor = 'rgba(255,255,255,0.1)';
+      }
+    });
+    render();
+  }
+
+  function setColor(id, color) {
+    selectedColor[id] = color;
+    const wrap = document.querySelector(`#epc-${id} .epc-colors`);
+    if (!wrap) return;
+    wrap.querySelectorAll('.eee-dot').forEach(d => d.classList.remove('active'));
+    const dot = wrap.querySelector(`[data-c="${color}"]`);
+    if (dot) dot.classList.add('active');
+    const lbl = wrap.querySelector('.epc-clabel');
+    if (lbl) lbl.textContent = cap(color);
+  }
+
+  function goWA(id) {
+    const car = cars.find(c=>c.id===id);
+    if (!car) return;
+    const color = selectedColor[id] ? ` Color: ${selectedColor[id]}.` : '';
+    const msg = `Hola 👋 Vengo de la EEE de La Oriental Automotors. Me interesa el ${car.model} en el Plan Asegúrate $500 (6 meses).${color} ¿Me indican disponibilidad y próximos pasos?`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,'_blank');
+  }
+
+  function cardHTML(car) {
+    if (!selectedColor[car.id]) selectedColor[car.id] = car.colors[0] || '';
+    const isMG = car.brand === 'MG';
+    const brandColor = isMG ? '#D91C24' : '#1A3A7C';
+    const dots = car.colors.map(c=>{
+      const hex = colorMap[c]||'#ccc';
+      const isWhite = c==='blanco';
+      const active = selectedColor[car.id]===c ? 'active':'';
+      return `<span class="eee-dot ${active}" data-c="${c}" title="${cap(c)}"
+        style="background:${hex};${isWhite?'box-shadow:inset 0 0 0 1px rgba(0,0,0,.3);':''}"
+        onclick="EEEPlan.setColor('${car.id}','${c}')"></span>`;
+    }).join('');
+
+    return `
+    <article id="epc-${car.id}" class="eee-plan-card">
+      <div style="overflow:hidden;position:relative">
+        <img src="${car.img}" alt="${car.model}" class="epc-img" loading="lazy"
+             onerror="this.src='https://placehold.co/700x380/0D1220/334155?text=${encodeURIComponent(car.model)}'" />
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(7,10,18,.5) 0%,transparent 50%)"></div>
+        <div style="position:absolute;top:12px;left:12px;background:${brandColor};color:#fff;border-radius:6px;padding:3px 10px;font-size:10px;font-weight:700;letter-spacing:1px">${car.brand}</div>
+        <div style="position:absolute;top:12px;right:12px;background:rgba(200,151,58,0.9);color:#070A12;border-radius:6px;padding:3px 9px;font-size:9px;font-weight:800;letter-spacing:.8px">$500 · 6 MESES</div>
+        ${car.note ? `<div style="position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.15);border-radius:999px;padding:3px 10px;font-size:10px;color:rgba(255,255,255,0.75)">⚙ ${car.note}</div>` : ''}
+      </div>
+
+      <div style="padding:18px 18px 20px;display:flex;flex-direction:column;flex:1;gap:0">
+        <p style="font-size:10px;color:#C8973A;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px">${car.brand}</p>
+        <h3 style="font-size:16px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:14px">${car.model}</h3>
+
+        <p style="font-size:10px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px">Cronograma de pagos</p>
+
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;margin-bottom:10px">
+          ${schedule(car)}
+          <div class="eee-total-strip">
+            <span class="tsl">Total · Entrega mes 6</span>
+            <span class="tsv">${money(car.total)}</span>
+          </div>
+        </div>
+
+        <div class="epc-colors" style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#64748b;margin-bottom:8px">
+            <span>Colores disponibles</span>
+            <span class="epc-clabel" style="font-weight:700;color:#C8973A">${cap(selectedColor[car.id])}</span>
+          </div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap">${dots}</div>
+        </div>
+
+        <button class="eee-btn-wa" onclick="EEEPlan.goWA('${car.id}')" style="margin-top:auto">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.122.554 4.112 1.523 5.84L0 24l6.335-1.506A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.954 0-3.78-.526-5.348-1.442l-.383-.228-3.762.894.952-3.671-.249-.397A9.937 9.937 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Consultar disponibilidad
+        </button>
+      </div>
+    </article>`;
+  }
+
+  function render() {
+    const grid = document.getElementById('eeePlanGrid');
+    if (!grid) return;
+    const list = cars.filter(c => brandFilter==='ALL' || c.brand===brandFilter);
+    grid.innerHTML = list.map(cardHTML).join('');
+  }
+
+  function init() {
+    setBrand('ALL');
+  }
+
+  if (document.readyState==='loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else { init(); }
+
+  return { setBrand, setColor, goWA };
+})();
+</script>
 
 
 <div class="divider mx-6"></div>
