@@ -32,7 +32,7 @@
     .header {
       background: rgba(7,10,18,0.95);
       border-bottom: 1px solid rgba(200,151,58,0.2);
-      padding: 20px 32px;
+      padding: 18px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -41,445 +41,424 @@
       z-index: 100;
       backdrop-filter: blur(16px);
     }
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .header-brand { display: flex; align-items: center; gap: 12px; }
     .header-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
+      width: 36px; height: 36px; border-radius: 10px;
       background: linear-gradient(135deg,#D91C24,#8B0000);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 12px;
-      color: #fff;
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900; font-size: 12px; color: #fff; flex-shrink: 0;
     }
-    .header-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: #fff;
-      line-height: 1.2;
-    }
-    .header-sub {
-      font-size: 11px;
-      color: var(--slate);
-      margin-top: 1px;
-    }
+    .header-title { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.2; }
+    .header-sub { font-size: 11px; color: var(--slate); margin-top: 1px; }
     .gold-badge {
       background: linear-gradient(135deg,rgba(200,151,58,0.15),rgba(232,185,106,0.08));
       border: 1px solid rgba(200,151,58,0.35);
-      border-radius: 999px;
-      padding: 4px 14px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gold-lt);
+      border-radius: 999px; padding: 4px 14px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--gold-lt);
     }
 
     /* ── MAIN CONTAINER ── */
-    .container {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
+    .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 100px; }
+
+    /* ── FELICIDADES BANNER ── */
+    .felicidades-banner {
+      background: linear-gradient(135deg, rgba(200,151,58,0.12), rgba(232,185,106,0.06));
+      border: 1px solid rgba(200,151,58,0.3);
+      border-radius: 20px;
+      padding: 32px 36px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+    .felicidades-foto-wrap {
+      flex-shrink: 0;
+      width: 220px;
+    }
+    .photo-area {
+      background: rgba(255,255,255,0.03);
+      border: 2px dashed rgba(200,151,58,0.4);
+      border-radius: 16px;
+      min-height: 160px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      overflow: hidden; position: relative;
+    }
+    .photo-area:hover { border-color: rgba(200,151,58,0.7); background: rgba(200,151,58,0.05); }
+    .photo-area img {
+      width: 100%; height: 100%; object-fit: cover;
+      position: absolute; inset: 0; border-radius: 14px;
+    }
+    .photo-placeholder { text-align: center; pointer-events: none; }
+    .photo-placeholder .icon { font-size: 28px; margin-bottom: 8px; }
+    .photo-placeholder p { font-size: 11px; color: var(--slate); line-height: 1.5; }
+    .photo-placeholder strong { color: var(--gold); display: block; font-size: 10px; margin-top: 4px; }
+    #photo-input { display: none; }
+    .photo-change-btn {
+      display: none;
+      margin-top: 8px;
+      width: 100%;
+      background: rgba(200,151,58,0.12);
+      border: 1px solid rgba(200,151,58,0.25);
+      border-radius: 8px;
+      padding: 6px;
+      font-size: 11px; font-weight: 600; color: var(--gold);
+      cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: background 0.15s;
+      text-align: center;
+    }
+    .photo-change-btn:hover { background: rgba(200,151,58,0.2); }
+
+    .felicidades-content { flex: 1; }
+    .felicidades-eyebrow {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .felicidades-eyebrow::after { content: ''; flex: 1; height: 1px; background: rgba(200,151,58,0.25); }
+    .felicidades-titulo {
+      font-size: 32px; font-weight: 900; color: #fff; line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .felicidades-titulo .nombre-cliente {
+      color: var(--gold-lt);
+      display: inline;
+    }
+    .felicidades-modelo {
+      font-size: 14px; font-weight: 600; color: var(--slate);
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .felicidades-modelo span {
+      background: rgba(217,28,36,0.12); border: 1px solid rgba(217,28,36,0.25);
+      border-radius: 6px; padding: 2px 10px; font-size: 11px;
+      font-weight: 700; color: #f87171; letter-spacing: 0.04em;
+    }
+    .felicidades-desc {
+      font-size: 13px; color: #94a3b8; line-height: 1.65;
     }
 
     /* ── SECTIONS ── */
     .section {
       background: var(--glass);
       border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 20px;
-      padding: 28px;
-      margin-bottom: 20px;
+      border-radius: 20px; padding: 28px; margin-bottom: 20px;
     }
     .section-title {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
     }
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(200,151,58,0.2);
-    }
-
-    /* ── VEHICLE TOP CARD ── */
-    .vehicle-top {
-      display: grid;
-      grid-template-columns: 260px 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-    .photo-area {
-      background: rgba(255,255,255,0.03);
-      border: 2px dashed rgba(200,151,58,0.3);
-      border-radius: 16px;
-      min-height: 180px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-      overflow: hidden;
-      position: relative;
-    }
-    .photo-area:hover {
-      border-color: rgba(200,151,58,0.6);
-      background: rgba(200,151,58,0.04);
-    }
-    .photo-area img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      inset: 0;
-      border-radius: 14px;
-    }
-    .photo-placeholder {
-      text-align: center;
-      pointer-events: none;
-    }
-    .photo-placeholder .icon {
-      font-size: 32px;
-      margin-bottom: 8px;
-    }
-    .photo-placeholder p {
-      font-size: 12px;
-      color: var(--slate);
-      line-height: 1.4;
-    }
-    .photo-placeholder strong {
-      color: var(--gold);
-      display: block;
-      font-size: 11px;
-      margin-top: 4px;
-    }
-    #photo-input { display: none; }
+    .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(200,151,58,0.2); }
 
     /* ── FORM FIELDS ── */
-    .fields-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
+    .fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .field-full { grid-column: 1 / -1; }
     .field label {
-      display: block;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--slate);
-      margin-bottom: 6px;
+      display: block; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--slate); margin-bottom: 6px;
     }
     .field input, .field select {
       width: 100%;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
-      color: #E2E8F0;
-      outline: none;
-      transition: border-color 0.2s;
+      border-radius: 10px; padding: 10px 14px;
+      font-size: 14px; font-family: 'Inter', sans-serif;
+      color: #E2E8F0; outline: none; transition: border-color 0.2s;
     }
-    .field input:focus, .field select:focus {
-      border-color: rgba(200,151,58,0.5);
-    }
+    .field input:focus, .field select:focus { border-color: rgba(200,151,58,0.5); }
     .field input::placeholder { color: rgba(148,163,184,0.4); }
     .field select option { background: #0F1623; color: #E2E8F0; }
 
     /* ── CHECKLIST ── */
-    .checklist {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .checklist { display: flex; flex-direction: column; gap: 8px; }
     .check-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 12px 14px;
-      border-radius: 12px;
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 14px; border-radius: 12px;
       background: rgba(255,255,255,0.02);
       border: 1px solid rgba(255,255,255,0.05);
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-      user-select: none;
+      cursor: pointer; transition: background 0.15s, border-color 0.15s; user-select: none;
     }
-    .check-item:hover {
-      background: rgba(255,255,255,0.05);
-    }
-    .check-item.checked {
-      background: rgba(74,222,128,0.07);
-      border-color: rgba(74,222,128,0.2);
-    }
+    .check-item:hover { background: rgba(255,255,255,0.05); }
+    .check-item.checked { background: rgba(74,222,128,0.07); border-color: rgba(74,222,128,0.2); }
     .check-box {
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
+      width: 22px; height: 22px; border-radius: 6px;
       border: 2px solid rgba(255,255,255,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.15s;
-      margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.15s; margin-top: 1px;
     }
-    .check-item.checked .check-box {
-      background: #4ade80;
-      border-color: #4ade80;
-    }
-    .check-box svg {
-      display: none;
-    }
-    .check-item.checked .check-box svg {
-      display: block;
-    }
-    .check-text {
-      flex: 1;
-    }
-    .check-label {
-      font-size: 14px;
-      font-weight: 500;
-      color: #E2E8F0;
-      line-height: 1.3;
-    }
-    .check-item.checked .check-label {
-      color: #86efac;
-    }
-    .check-note {
-      font-size: 11px;
-      color: var(--slate);
-      margin-top: 3px;
-      line-height: 1.4;
-    }
+    .check-item.checked .check-box { background: #4ade80; border-color: #4ade80; }
+    .check-box svg { display: none; }
+    .check-item.checked .check-box svg { display: block; }
+    .check-text { flex: 1; }
+    .check-label { font-size: 14px; font-weight: 500; color: #E2E8F0; line-height: 1.3; }
+    .check-item.checked .check-label { color: #86efac; }
+    .check-note { font-size: 11px; color: var(--slate); margin-top: 3px; line-height: 1.4; }
     .check-highlight {
       display: inline-block;
-      background: rgba(200,151,58,0.12);
-      border: 1px solid rgba(200,151,58,0.25);
-      border-radius: 5px;
-      padding: 1px 7px;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--gold-lt);
-      margin-top: 4px;
+      background: rgba(200,151,58,0.12); border: 1px solid rgba(200,151,58,0.25);
+      border-radius: 5px; padding: 1px 7px;
+      font-size: 11px; font-weight: 700; color: var(--gold-lt); margin-top: 4px;
     }
+    .check-category {
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: rgba(200,151,58,0.7);
+      margin: 16px 0 6px; padding-left: 4px;
+    }
+    .check-category:first-child { margin-top: 0; }
 
     /* ── PROGRESS BAR ── */
     .progress-bar-wrap {
-      background: rgba(255,255,255,0.06);
-      border-radius: 999px;
-      height: 6px;
-      overflow: hidden;
-      margin-bottom: 6px;
+      background: rgba(255,255,255,0.06); border-radius: 999px;
+      height: 6px; overflow: hidden; margin-bottom: 6px;
     }
     .progress-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #4ade80, #22c55e);
-      border-radius: 999px;
-      transition: width 0.3s ease;
+      height: 100%; background: linear-gradient(90deg, #4ade80, #22c55e);
+      border-radius: 999px; transition: width 0.3s ease;
     }
-    .progress-label {
-      font-size: 12px;
-      color: var(--slate);
+    .progress-label { font-size: 12px; color: var(--slate); }
+    .progress-label span { font-weight: 700; color: #4ade80; }
+
+    /* ── COUNTER CHIPS ── */
+    .counter-chips { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .chip { padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+    .chip-total { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--slate); }
+    .chip-done { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.25); color: #4ade80; }
+    .chip-pending { background: rgba(251,191,36,0.08); border: 1px solid rgba(251,191,36,0.2); color: #fbbf24; }
+
+    /* ── MG HISTORIA ── */
+    .mg-historia-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .mg-stat {
+      background: rgba(217,28,36,0.06); border: 1px solid rgba(217,28,36,0.15);
+      border-radius: 12px; padding: 14px 18px;
+      display: flex; align-items: center; gap: 14px;
     }
-    .progress-label span {
-      font-weight: 700;
-      color: #4ade80;
+    .mg-stat-number { font-size: 26px; font-weight: 900; color: #f87171; line-height: 1; }
+    .mg-stat-label { font-size: 11px; color: var(--slate); margin-top: 2px; }
+    .mg-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .mg-badge {
+      background: rgba(217,28,36,0.1); border: 1px solid rgba(217,28,36,0.2);
+      border-radius: 6px; padding: 3px 10px;
+      font-size: 10px; font-weight: 700; color: #f87171;
     }
 
-    /* ── SIGNATURES ── */
-    .signatures-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+    /* ── MG ZS FEATURES ── */
+    .zs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .zs-feat {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px; padding: 14px;
     }
-    .sig-box {
-      text-align: center;
+    .zs-feat-icon { font-size: 20px; margin-bottom: 6px; }
+    .zs-feat-name { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+    .zs-feat-desc { font-size: 11px; color: var(--slate); line-height: 1.4; }
+
+    /* ── CONFORMIDAD ── */
+    .conformidad-box {
+      background: rgba(74,222,128,0.05);
+      border: 1px solid rgba(74,222,128,0.15);
+      border-radius: 16px; padding: 24px;
     }
+    .conformidad-check {
+      display: flex; align-items: flex-start; gap: 16px;
+      cursor: pointer; user-select: none; padding: 8px;
+      border-radius: 12px; transition: background 0.15s;
+    }
+    .conformidad-check:hover { background: rgba(74,222,128,0.05); }
+    .conformidad-box-check {
+      width: 28px; height: 28px; border-radius: 8px;
+      border: 2px solid rgba(255,255,255,0.25);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px; transition: all 0.2s;
+    }
+    .conformidad-check.checked .conformidad-box-check {
+      background: #4ade80; border-color: #4ade80;
+    }
+    .conformidad-box-check svg { display: none; }
+    .conformidad-check.checked .conformidad-box-check svg { display: block; }
+    .conformidad-text h4 {
+      font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px;
+    }
+    .conformidad-check.checked .conformidad-text h4 { color: #86efac; }
+    .conformidad-text p { font-size: 12px; color: var(--slate); line-height: 1.5; }
+    .conformidad-firma-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 20px; margin-top: 24px; padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .sig-block { text-align: center; }
     .sig-line {
-      height: 80px;
+      height: 60px;
       border-bottom: 1px solid rgba(255,255,255,0.15);
-      margin-bottom: 10px;
-      border-radius: 0;
+      margin-bottom: 8px;
     }
-    .sig-role {
-      font-size: 11px;
-      font-weight: 700;
-      color: #E2E8F0;
-      letter-spacing: 0.04em;
-    }
-    .sig-sub {
-      font-size: 10px;
-      color: var(--slate);
-      margin-top: 3px;
-    }
+    .sig-role { font-size: 11px; font-weight: 700; color: #E2E8F0; letter-spacing: 0.04em; }
+    .sig-sub { font-size: 10px; color: var(--slate); margin-top: 3px; }
 
     /* ── PRINT BUTTON ── */
     .btn-print {
-      position: fixed;
-      bottom: 28px;
-      right: 28px;
+      position: fixed; bottom: 28px; right: 28px;
       background: linear-gradient(135deg, #C8973A, #9A6D1F);
-      color: #fff;
-      border: none;
-      border-radius: 14px;
-      padding: 14px 24px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      color: #fff; border: none; border-radius: 14px;
+      padding: 14px 24px; font-family: 'Inter', sans-serif;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 8px;
       box-shadow: 0 8px 32px rgba(200,151,58,0.35);
-      transition: transform 0.15s, box-shadow 0.15s;
-      z-index: 200;
+      transition: transform 0.15s, box-shadow 0.15s; z-index: 200;
     }
-    .btn-print:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(200,151,58,0.45);
-    }
-    .btn-print:active {
-      transform: translateY(0);
-    }
-
-    /* ── COUNTER CHIPS ── */
-    .counter-chips {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .chip {
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .chip-total {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--slate);
-    }
-    .chip-done {
-      background: rgba(74,222,128,0.1);
-      border: 1px solid rgba(74,222,128,0.25);
-      color: #4ade80;
-    }
-    .chip-pending {
-      background: rgba(251,191,36,0.08);
-      border: 1px solid rgba(251,191,36,0.2);
-      color: #fbbf24;
-    }
+    .btn-print:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,151,58,0.45); }
+    .btn-print:active { transform: translateY(0); }
 
     /* ════════════════════════════
        PRINT STYLES
     ════════════════════════════ */
     @media print {
-      @page {
-        size: A4 portrait;
-        margin: 1.2cm 1.4cm;
+      @page { size: A4 portrait; margin: 1cm 1.4cm; }
+
+      html, body { background: #fff !important; color: #111 !important; font-size: 11px; }
+
+      /* ── Encabezado estilo Recibo ── */
+      .header { display: none !important; }
+      .print-header {
+        display: flex !important;
+        align-items: center; justify-content: space-between;
+        padding-bottom: 14px;
+        border-bottom: 3px solid #D91C24;
+        margin-bottom: 16px;
       }
-      html, body {
-        background: #fff !important;
-        color: #111 !important;
-        font-size: 11px;
+      .print-header-left { display: flex; align-items: center; gap: 12px; }
+      .print-header-logo {
+        width: 44px; height: 44px; border-radius: 10px;
+        background: linear-gradient(135deg,#D91C24,#8B0000) !important;
+        display: flex; align-items: center; justify-content: center;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
       }
-      .header {
-        position: static;
-        background: #fff !important;
-        border-bottom: 2px solid #D91C24;
-        padding: 12px 0 14px;
-        margin-bottom: 12px;
-        backdrop-filter: none;
+      .print-header-logo span { font-weight: 900; font-size: 13px; color: #fff !important; }
+      .print-header-company { line-height: 1.3; }
+      .print-header-company strong { font-size: 14px; font-weight: 900; color: #111 !important; display: block; }
+      .print-header-company small { font-size: 10px; color: #555 !important; }
+      .print-header-right { text-align: right; }
+      .print-header-doc {
+        font-size: 22px; font-weight: 900; color: #D91C24 !important;
+        letter-spacing: 0.06em; line-height: 1;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
       }
-      .header-title { color: #111 !important; font-size: 14px; }
-      .header-sub { color: #555 !important; }
-      .gold-badge {
-        background: #fef9c3 !important;
-        border-color: #c8973a !important;
-        color: #92400e !important;
-      }
-      .btn-print { display: none !important; }
-      .container { padding: 0; max-width: 100%; }
-      .section {
-        background: #fff !important;
-        border: 1px solid #e5e7eb !important;
+      .print-header-meta { font-size: 10px; color: #555 !important; margin-top: 3px; }
+
+      /* ── Felicidades banner en impresión ── */
+      .felicidades-banner {
+        background: #fff9f0 !important;
+        border: 2px solid #C8973A !important;
         border-radius: 10px !important;
-        padding: 16px !important;
         margin-bottom: 12px !important;
-        break-inside: avoid;
+        padding: 16px 20px !important;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+      .felicidades-foto-wrap { width: 140px !important; }
+      .photo-area {
+        background: #f9fafb !important; border: 1px solid #d1d5db !important;
+        min-height: 120px !important;
+      }
+      .photo-placeholder p, .photo-placeholder strong { color: #6b7280 !important; }
+      .photo-change-btn { display: none !important; }
+      .felicidades-titulo { font-size: 22px !important; color: #111 !important; }
+      .felicidades-titulo .nombre-cliente { color: #C8973A !important; }
+      .felicidades-eyebrow { color: #C8973A !important; }
+      .felicidades-modelo { color: #555 !important; }
+      .felicidades-modelo span {
+        background: #fee2e2 !important; color: #991b1b !important;
+        border-color: #fca5a5 !important;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+      }
+      .felicidades-desc { color: #555 !important; }
+
+      /* ── Sections ── */
+      .btn-print { display: none !important; }
+      .container { padding: 0 !important; max-width: 100% !important; }
+      .section {
+        background: #fff !important; border: 1px solid #e5e7eb !important;
+        border-radius: 10px !important; padding: 14px !important;
+        margin-bottom: 10px !important; break-inside: avoid;
       }
       .section-title { color: #92400e !important; font-size: 9px; }
       .section-title::after { background: #e5d8c3 !important; }
-      .photo-area {
-        background: #f9fafb !important;
-        border: 2px dashed #d1d5db !important;
-      }
-      .photo-placeholder p, .photo-placeholder strong { color: #6b7280 !important; }
       .field label { color: #6b7280 !important; }
       .field input, .field select {
-        background: #f9fafb !important;
-        border-color: #d1d5db !important;
-        color: #111 !important;
+        background: #f9fafb !important; border-color: #d1d5db !important; color: #111 !important;
       }
+
+      /* ── Checklist ── */
+      .counter-chips { display: none !important; }
+      .progress-bar-wrap, .progress-label { display: none !important; }
+      .check-category { color: #92400e !important; }
       .check-item {
-        background: #fff !important;
-        border-color: #e5e7eb !important;
-        padding: 8px 10px !important;
+        background: #fff !important; border-color: #e5e7eb !important;
+        padding: 7px 10px !important;
       }
-      .check-item.checked {
-        background: #f0fdf4 !important;
-        border-color: #86efac !important;
-      }
-      .check-box {
-        border-color: #d1d5db !important;
-        background: #fff !important;
-      }
-      .check-item.checked .check-box {
-        background: #4ade80 !important;
-        border-color: #4ade80 !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
+      .check-item.checked { background: #f0fdf4 !important; border-color: #86efac !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .check-box { border-color: #d1d5db !important; background: #fff !important; }
+      .check-item.checked .check-box { background: #4ade80 !important; border-color: #4ade80 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .check-box svg { stroke: #fff !important; }
       .check-label { color: #111 !important; font-size: 12px !important; }
       .check-item.checked .check-label { color: #15803d !important; }
-      .check-note { color: #6b7280 !important; }
-      .check-highlight {
-        background: #fef9c3 !important;
-        border-color: #c8973a !important;
-        color: #92400e !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
+      .check-note { color: #6b7280 !important; font-size: 10px !important; }
+      .check-highlight { background: #fef9c3 !important; border-color: #c8973a !important; color: #92400e !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+      /* ── MG Historia ── */
+      .mg-historia-grid { grid-template-columns: 1fr 1fr !important; }
+      .mg-stat { background: #fff0f0 !important; border-color: #fca5a5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .mg-stat-number { color: #991b1b !important; }
+      .mg-stat-label { color: #6b7280 !important; }
+      .mg-badge { background: #fee2e2 !important; border-color: #fca5a5 !important; color: #991b1b !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .zs-grid { grid-template-columns: repeat(3,1fr) !important; }
+      .zs-feat { background: #f9fafb !important; border-color: #e5e7eb !important; }
+      .zs-feat-name { color: #111 !important; }
+      .zs-feat-desc { color: #6b7280 !important; }
+
+      /* ── Conformidad ── */
+      .conformidad-box { background: #f0fdf4 !important; border-color: #86efac !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .conformidad-check.checked .conformidad-box-check { background: #4ade80 !important; border-color: #4ade80 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .conformidad-check.checked .conformidad-box-check svg { display: block !important; }
+      .conformidad-text h4 { color: #111 !important; }
+      .conformidad-check.checked .conformidad-text h4 { color: #15803d !important; }
+      .conformidad-text p { color: #6b7280 !important; }
+      .conformidad-box-check { border-color: #d1d5db !important; }
       .sig-line { border-bottom-color: #374151 !important; }
       .sig-role { color: #111 !important; }
       .sig-sub { color: #6b7280 !important; }
-      .counter-chips { display: none !important; }
-      .progress-bar-wrap, .progress-label { display: none !important; }
+
+      /* ── Textarea observaciones ── */
+      textarea {
+        background: #f9fafb !important; border-color: #d1d5db !important;
+        color: #111 !important;
+      }
+
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
+    /* En pantalla, ocultar el header de impresión */
+    .print-header { display: none; }
   </style>
 </head>
 
 <body>
+
+<!-- ── PRINT HEADER (solo visible al imprimir) ── -->
+<div class="print-header">
+  <div class="print-header-left">
+    <div class="print-header-logo">
+      <span style="color:#fff;font-weight:900;font-size:13px">LO</span>
+    </div>
+    <div class="print-header-company">
+      <strong>La Oriental Automotors</strong>
+      <small>MG &amp; Maxus · Maturín, Venezuela</small>
+    </div>
+  </div>
+  <div class="print-header-right">
+    <div class="print-header-doc">ENTREGA</div>
+    <div class="print-header-meta" id="print-meta">EEE · Experiencia Exclusiva</div>
+  </div>
+</div>
 
 <!-- ── HEADER ── -->
 <header class="header">
@@ -497,86 +476,98 @@
 <!-- ── MAIN ── -->
 <div class="container">
 
+  <!-- ─ BANNER FELICIDADES ─ -->
+  <div class="felicidades-banner">
+    <!-- Foto del vehículo -->
+    <div class="felicidades-foto-wrap">
+      <div class="photo-area" id="photo-area" onclick="document.getElementById('photo-input').click()">
+        <img id="photo-preview" src="" alt="" style="display:none" />
+        <div class="photo-placeholder" id="photo-placeholder">
+          <div class="icon">📷</div>
+          <p>Toca para cargar<br/>la foto del vehículo</p>
+          <strong>JPG · PNG · WEBP</strong>
+        </div>
+      </div>
+      <input type="file" id="photo-input" accept="image/*" />
+      <button class="photo-change-btn" id="photo-change-btn" onclick="document.getElementById('photo-input').click()">
+        ↺ Cambiar foto
+      </button>
+    </div>
+
+    <!-- Texto felicidades -->
+    <div class="felicidades-content">
+      <div class="felicidades-eyebrow">🎉 Entrega oficial · La Oriental Automotors</div>
+      <div class="felicidades-titulo">
+        ¡Felicidades,<br/>
+        <span class="nombre-cliente" id="nombre-display">tu nuevo cliente</span>!
+      </div>
+      <div class="felicidades-modelo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 4v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span id="modelo-display">Modelo no seleccionado</span>
+        <span id="brand-badge" style="display:none">MG</span>
+      </div>
+      <p class="felicidades-desc">
+        Hoy es un día especial. Este documento certifica que has recibido tu vehículo en óptimas condiciones y que el equipo de La Oriental Automotors ha completado contigo todos los pasos de verificación, instrucciones y documentación requeridos.
+      </p>
+    </div>
+  </div>
+
+
   <!-- ─ 1. Datos del vehículo ─ -->
   <div class="section">
     <div class="section-title">01 · Datos del vehículo entregado</div>
-    <div class="vehicle-top">
-
-      <!-- Foto -->
-      <div>
-        <div class="photo-area" id="photo-area" onclick="document.getElementById('photo-input').click()">
-          <img id="photo-preview" src="" alt="" style="display:none" />
-          <div class="photo-placeholder" id="photo-placeholder">
-            <div class="icon">📷</div>
-            <p>Toca para cargar<br/>la foto del vehículo</p>
-            <strong>JPG · PNG · WEBP</strong>
-          </div>
-        </div>
-        <input type="file" id="photo-input" accept="image/*" />
+    <div class="fields-grid">
+      <div class="field">
+        <label>Marca</label>
+        <select id="campo-marca">
+          <option value="">Seleccionar…</option>
+          <option>MG</option>
+          <option>Maxus</option>
+        </select>
       </div>
-
-      <!-- Campos -->
-      <div class="fields-grid">
-        <div class="field">
-          <label>Marca</label>
-          <select id="campo-marca">
-            <option value="">Seleccionar…</option>
-            <option>MG</option>
-            <option>Maxus</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Modelo</label>
-          <select id="campo-modelo">
-            <option value="">Seleccionar…</option>
-            <optgroup label="MG">
-              <option>MG3 1.5L MT STD</option>
-              <option>MG3 1.5L AT STD</option>
-              <option>MG5 1.5L MT</option>
-              <option>MG5 1.5L CVT COM</option>
-              <option>MG ZS MT COM</option>
-              <option>MG ZS AT COM</option>
-              <option>MG ZS AT LUX</option>
-              <option>MG RX5 1.5T DCT</option>
-              <option>MG RX9 2.0T AT 4WD</option>
-            </optgroup>
-            <optgroup label="Maxus">
-              <option>Maxus D60</option>
-              <option>Maxus D90 AT</option>
-              <option>Maxus D90 LUX 4x4</option>
-              <option>Maxus T60 Comfort 4x4</option>
-              <option>Maxus T60 Comfort 4x2</option>
-              <option>Maxus T70 4x4 AT</option>
-              <option>Maxus T90 4x4 Exe. Lux</option>
-              <option>Maxus S80 Diesel</option>
-              <option>Maxus C300 Chasis</option>
-            </optgroup>
-          </select>
-        </div>
-        <div class="field">
-          <label>Color</label>
-          <input type="text" id="campo-color" placeholder="Ej: Plata, Negro, Blanco…" />
-        </div>
-        <div class="field">
-          <label>Año</label>
-          <input type="text" id="campo-anio" placeholder="2026" />
-        </div>
-        <div class="field">
-          <label>Placa</label>
-          <input type="text" id="campo-placa" placeholder="AA000AA" style="font-family:monospace;text-transform:uppercase;font-weight:700;" />
-        </div>
-        <div class="field">
-          <label>VIN / Chasis</label>
-          <input type="text" id="campo-vin" placeholder="17 caracteres" style="font-family:monospace;" />
-        </div>
-        <div class="field">
-          <label>Serial de motor</label>
-          <input type="text" id="campo-motor" placeholder="Serial motor" style="font-family:monospace;" />
-        </div>
-        <div class="field">
-          <label>Fecha de entrega</label>
-          <input type="date" id="campo-fecha" />
-        </div>
+      <div class="field">
+        <label>Modelo</label>
+        <select id="campo-modelo">
+          <option value="">Seleccionar…</option>
+          <optgroup label="MG">
+            <option>MG3 1.5L MT STD</option>
+            <option>MG3 1.5L AT STD</option>
+            <option>MG5 1.5L MT</option>
+            <option>MG5 1.5L CVT COM</option>
+            <option>MG ZS MT COM</option>
+            <option>MG ZS AT COM</option>
+            <option>MG ZS AT LUX</option>
+            <option>MG RX5 1.5T DCT</option>
+            <option>MG RX9 2.0T AT 4WD</option>
+          </optgroup>
+          <optgroup label="Maxus">
+            <option>Maxus D60</option>
+            <option>Maxus D90 AT</option>
+            <option>Maxus D90 LUX 4x4</option>
+            <option>Maxus T60 Comfort 4x4</option>
+            <option>Maxus T60 Comfort 4x2</option>
+            <option>Maxus T70 4x4 AT</option>
+            <option>Maxus T90 4x4 Exe. Lux</option>
+            <option>Maxus S80 Diesel</option>
+            <option>Maxus C300 Chasis</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="field">
+        <label>Color</label>
+        <input type="text" id="campo-color" placeholder="Ej: Plata, Negro, Blanco…" />
+      </div>
+      <div class="field">
+        <label>Año</label>
+        <input type="text" id="campo-anio" placeholder="2026" />
+      </div>
+      <div class="field field-full">
+        <label>Placa</label>
+        <input type="text" id="campo-placa" placeholder="AA000AA" style="font-family:monospace;text-transform:uppercase;font-weight:700;letter-spacing:0.1em" />
+      </div>
+      <div class="field field-full">
+        <label>Fecha de entrega</label>
+        <input type="date" id="campo-fecha" />
       </div>
     </div>
   </div>
@@ -612,9 +603,8 @@
   <div class="section">
     <div class="section-title">03 · Checklist de entrega</div>
 
-    <!-- Progreso -->
     <div class="counter-chips" id="counter-chips">
-      <span class="chip chip-total" id="chip-total">0 / 0 ítems</span>
+      <span class="chip chip-total" id="chip-total">0 ítems</span>
       <span class="chip chip-done" id="chip-done" style="display:none">✓ 0 verificados</span>
       <span class="chip chip-pending" id="chip-pending" style="display:none">⏳ 0 pendientes</span>
     </div>
@@ -627,10 +617,7 @@
 
     <div class="checklist" id="checklist">
 
-      <!-- DOCUMENTACIÓN -->
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(200,151,58,0.7);margin:12px 0 6px;padding-left:4px">
-        📄 Documentación
-      </div>
+      <div class="check-category">📄 Documentación</div>
 
       <div class="check-item" onclick="toggleCheck(this)">
         <div class="check-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -672,10 +659,7 @@
         </div>
       </div>
 
-      <!-- ESTADO DEL VEHÍCULO -->
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(200,151,58,0.7);margin:20px 0 6px;padding-left:4px">
-        🚗 Revisión del vehículo
-      </div>
+      <div class="check-category" style="margin-top:16px">🚗 Revisión del vehículo</div>
 
       <div class="check-item" onclick="toggleCheck(this)">
         <div class="check-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -734,10 +718,7 @@
         </div>
       </div>
 
-      <!-- ACCESORIOS -->
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(200,151,58,0.7);margin:20px 0 6px;padding-left:4px">
-        🔑 Accesorios y dotación
-      </div>
+      <div class="check-category" style="margin-top:16px">🔑 Accesorios y dotación</div>
 
       <div class="check-item" onclick="toggleCheck(this)">
         <div class="check-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -755,26 +736,7 @@
         </div>
       </div>
 
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="check-text">
-          <div class="check-label">Kit de herramientas y gato hidráulico</div>
-          <div class="check-note">Verificar presencia completa del kit estándar de fábrica</div>
-        </div>
-      </div>
-
-      <div class="check-item" onclick="toggleCheck(this)">
-        <div class="check-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="check-text">
-          <div class="check-label">Extintor y chaleco de seguridad</div>
-          <div class="check-note">Dotación de seguridad reglamentaria a bordo</div>
-        </div>
-      </div>
-
-      <!-- INSTRUCCIONES Y SERVICIO -->
-      <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(200,151,58,0.7);margin:20px 0 6px;padding-left:4px">
-        ⚙️ Instrucciones y mantenimiento
-      </div>
+      <div class="check-category" style="margin-top:16px">⚙️ Instrucciones y mantenimiento</div>
 
       <div class="check-item" onclick="toggleCheck(this)">
         <div class="check-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
@@ -836,53 +798,177 @@
     </div>
   </div>
 
-  <!-- ─ 4. Observaciones ─ -->
+  <!-- ─ 4. Historia MG Motor ─ -->
   <div class="section">
-    <div class="section-title">04 · Observaciones</div>
+    <div class="section-title">04 · Historia de la marca MG Motor</div>
+    <div style="display:flex;gap:20px;align-items:flex-start">
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+          <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#D91C24,#8B0000);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <span style="font-weight:900;color:#fff;font-size:15px">MG</span>
+          </div>
+          <div>
+            <p style="font-size:15px;font-weight:700;color:#fff">MG Motor</p>
+            <p style="font-size:11px;color:#f87171;font-weight:500;margin-top:1px">Desde 1924 · Herencia británica · Presencia global</p>
+          </div>
+        </div>
+        <p style="font-size:13px;color:#94a3b8;line-height:1.7;margin-bottom:16px">
+          MG es una marca con historia desde <strong style="color:#fff">1924</strong>, reconocida por su
+          <strong style="color:#fff">herencia británica</strong>, espíritu deportivo y evolución hacia
+          vehículos modernos, tecnológicos y accesibles para nuevos mercados internacionales.
+          Hoy MG combina diseño, seguridad, innovación y una propuesta atractiva para quienes
+          buscan un vehículo con <em style="color:var(--gold-lt);font-style:normal;font-weight:600">personalidad y respaldo global</em>.
+          Con presencia en más de <strong style="color:#fff">80 países</strong> y respaldada por
+          <strong style="color:#fff">SAIC Motor</strong>, MG lidera la transformación hacia
+          la movilidad inteligente y accesible.
+        </p>
+        <div class="mg-badges">
+          <span class="mg-badge">Good Design Award</span>
+          <span class="mg-badge">Seguridad 5 ★ ANCAP</span>
+          <span class="mg-badge">MG Pilot</span>
+          <span class="mg-badge">+80 países</span>
+          <span class="mg-badge">SAIC Motor</span>
+        </div>
+      </div>
+      <div class="mg-historia-grid" style="flex-shrink:0;width:200px;gap:10px">
+        <div class="mg-stat" style="grid-column:1/-1">
+          <div>
+            <div class="mg-stat-number">100+</div>
+            <div class="mg-stat-label">Años de historia</div>
+          </div>
+        </div>
+        <div class="mg-stat" style="grid-column:1/-1">
+          <div>
+            <div class="mg-stat-number">80+</div>
+            <div class="mg-stat-label">Países con presencia</div>
+          </div>
+        </div>
+        <div class="mg-stat" style="grid-column:1/-1">
+          <div>
+            <div class="mg-stat-number">5★</div>
+            <div class="mg-stat-label">Seguridad ANCAP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ 5. MG ZS New ─ -->
+  <div class="section">
+    <div class="section-title">05 · MG ZS New · Ficha de referencia</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+      <img src="https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69986711e92bc150fce37108.png"
+           alt="MG ZS" style="width:180px;height:100px;object-fit:cover;border-radius:10px;border:1px solid rgba(217,28,36,0.2)"
+           onerror="this.style.display='none'" />
+      <div>
+        <p style="font-size:16px;font-weight:800;color:#fff;margin-bottom:4px">MG ZS New 2025–2026</p>
+        <p style="font-size:12px;color:#94a3b8;line-height:1.5;max-width:480px">
+          SUV compacto con diseño renovado, tecnología de conducción asistida y conectividad avanzada.
+          Disponible en versión Manual (MT) y Automático (AT), con motor 1.5L eficiente y equipamiento
+          premium accesible para toda la familia.
+        </p>
+      </div>
+    </div>
+    <div class="zs-grid">
+      <div class="zs-feat">
+        <div class="zs-feat-icon">🏎️</div>
+        <div class="zs-feat-name">Motor 1.5L</div>
+        <div class="zs-feat-desc">Motor naftero de 113 CV — MT sincrónico o AT automático de 4 velocidades</div>
+      </div>
+      <div class="zs-feat">
+        <div class="zs-feat-icon">📱</div>
+        <div class="zs-feat-name">Pantalla central 10.1"</div>
+        <div class="zs-feat-desc">Apple CarPlay y Android Auto integrados, cámara trasera de alta resolución</div>
+      </div>
+      <div class="zs-feat">
+        <div class="zs-feat-icon">🛡️</div>
+        <div class="zs-feat-name">5 Estrellas ANCAP</div>
+        <div class="zs-feat-desc">Máxima calificación de seguridad con 6 airbags de serie</div>
+      </div>
+      <div class="zs-feat">
+        <div class="zs-feat-icon">💡</div>
+        <div class="zs-feat-name">Luces LED completas</div>
+        <div class="zs-feat-desc">Faros delanteros full LED, luces de día DRL y grupo óptico trasero LED</div>
+      </div>
+      <div class="zs-feat">
+        <div class="zs-feat-icon">🅿️</div>
+        <div class="zs-feat-name">Sensores de parqueo</div>
+        <div class="zs-feat-desc">Sensores delanteros y traseros + cámara de reversa con guías dinámicas</div>
+      </div>
+      <div class="zs-feat">
+        <div class="zs-feat-icon">❄️</div>
+        <div class="zs-feat-name">AC automático</div>
+        <div class="zs-feat-desc">Climatizador automático con control digital e ionizador de aire (LUX)</div>
+      </div>
+      <div class="zs-feat">
+        <div class="zs-feat-icon">🚦</div>
+        <div class="zs-feat-name">MG Pilot (AT LUX)</div>
+        <div class="zs-feat-desc">Asistente de carril, alerta de colisión frontal y control de crucero adaptativo</div>
+      </div>
+      <div class="zs-feat">
+        <div class="zs-feat-icon">🎵</div>
+        <div class="zs-feat-name">Sistema de audio</div>
+        <div class="zs-feat-desc">Sistema de audio con 4 altavoces, control en volante y modo Bluetooth</div>
+      </div>
+      <div class="zs-feat">
+        <div class="zs-feat-icon">🔒</div>
+        <div class="zs-feat-name">Garantía fábrica</div>
+        <div class="zs-feat-desc">Garantía de fábrica según plan de mantenimiento — primer servicio a 1.000 km</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ 6. Observaciones ─ -->
+  <div class="section">
+    <div class="section-title">06 · Observaciones</div>
     <textarea
       id="campo-obs"
       placeholder="Anotaciones adicionales, compromisos pendientes, condiciones especiales, etc."
       style="
-        width:100%;
-        min-height:90px;
+        width:100%; min-height:90px;
         background:rgba(255,255,255,0.05);
         border:1px solid rgba(255,255,255,0.1);
-        border-radius:12px;
-        padding:14px;
-        font-size:14px;
-        font-family:'Inter',sans-serif;
-        color:#E2E8F0;
-        outline:none;
-        resize:vertical;
-        line-height:1.5;
+        border-radius:12px; padding:14px;
+        font-size:14px; font-family:'Inter',sans-serif;
+        color:#E2E8F0; outline:none; resize:vertical; line-height:1.5;
       "
     ></textarea>
   </div>
 
-  <!-- ─ 5. Firmas ─ -->
+  <!-- ─ 7. Conformidad ─ -->
   <div class="section">
-    <div class="section-title">05 · Conformidad y firmas</div>
-    <div class="signatures-grid">
-      <div class="sig-box">
-        <div class="sig-line"></div>
-        <div class="sig-role">Firma del Cliente</div>
-        <div class="sig-sub" id="sig-cliente-nombre" style="margin-top:6px;font-size:12px;color:#94a3b8">Nombre y C.I.</div>
-      </div>
-      <div class="sig-box">
-        <div class="sig-line"></div>
-        <div class="sig-role">Asesor de Ventas</div>
-        <div class="sig-sub" id="sig-asesor-nombre" style="margin-top:6px;font-size:12px;color:#94a3b8">Nombre y firma</div>
-      </div>
-      <div class="sig-box">
-        <div class="sig-line"></div>
-        <div class="sig-role">Director / Gerente</div>
-        <div class="sig-sub">La Oriental Automotors</div>
+    <div class="section-title">07 · Conformidad del cliente</div>
+
+    <div class="conformidad-box">
+      <div class="conformidad-check" id="conformidad-check" onclick="toggleConformidad()">
+        <div class="conformidad-box-check" id="conformidad-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="conformidad-text">
+          <h4>✓ Acepto y estoy consciente de todo lo conversado en la entrega</h4>
+          <p>
+            Declaro haber recibido el vehículo en las condiciones descritas, haber revisado todos los puntos del checklist junto al asesor, y haber recibido las instrucciones completas de mantenimiento, garantía y uso del vehículo por parte de La Oriental Automotors.
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- Fecha pie -->
-    <div style="margin-top:24px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;font-size:11px;color:#475569;">
-      Documento generado por el sistema EEE · La Oriental Automotors MG &amp; Maxus · Maturín, Venezuela
+    <!-- Firma cliente y asesor -->
+    <div class="conformidad-firma-grid">
+      <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-role">Firma del Cliente</div>
+        <div class="sig-sub" id="sig-cliente-nombre">Nombre y C.I.</div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-role">Asesor de Ventas</div>
+        <div class="sig-sub" id="sig-asesor-nombre">Nombre y firma</div>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;font-size:11px;color:#475569;">
+      Documento EEE · La Oriental Automotors MG &amp; Maxus · Maturín, Venezuela
     </div>
   </div>
 
@@ -890,7 +976,7 @@
 
 
 <!-- ── BOTÓN IMPRIMIR ── -->
-<button class="btn-print" onclick="imprimirFormato()">
+<button class="btn-print" onclick="window.print()">
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
     <polyline points="6 9 6 2 18 2 18 9"/>
     <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
@@ -909,21 +995,55 @@
     reader.onload = function(ev) {
       const img = document.getElementById('photo-preview')
       const ph  = document.getElementById('photo-placeholder')
+      const btn = document.getElementById('photo-change-btn')
       img.src = ev.target.result
       img.style.display = 'block'
       ph.style.display = 'none'
+      btn.style.display = 'block'
     }
     reader.readAsDataURL(file)
   })
 
-  // ── FIRMAS DINÁMICAS ──────────────────────────────────
+  // ── NOMBRE DEL CLIENTE → BANNER ───────────────────────
   document.getElementById('campo-cliente').addEventListener('input', function() {
-    const el = document.getElementById('sig-cliente-nombre')
-    el.textContent = this.value || 'Nombre y C.I.'
+    const val = this.value.trim()
+    document.getElementById('nombre-display').textContent = val || 'tu nuevo cliente'
+    document.getElementById('sig-cliente-nombre').textContent = val ? val + ' · C.I.' : 'Nombre y C.I.'
   })
+
+  // ── ASESOR → FIRMA ────────────────────────────────────
   document.getElementById('campo-asesor').addEventListener('input', function() {
-    const el = document.getElementById('sig-asesor-nombre')
-    el.textContent = this.value || 'Nombre y firma'
+    document.getElementById('sig-asesor-nombre').textContent = this.value || 'Nombre y firma'
+  })
+
+  // ── MODELO → BANNER ───────────────────────────────────
+  document.getElementById('campo-modelo').addEventListener('change', function() {
+    const val = this.value
+    document.getElementById('modelo-display').textContent = val || 'Modelo no seleccionado'
+  })
+  document.getElementById('campo-marca').addEventListener('change', function() {
+    const val = this.value
+    const badge = document.getElementById('brand-badge')
+    if (val) {
+      badge.textContent = val
+      badge.style.display = 'inline'
+    } else {
+      badge.style.display = 'none'
+    }
+  })
+
+  // ── FECHA → PRINT META ────────────────────────────────
+  document.getElementById('campo-fecha').addEventListener('change', function() {
+    const contrato = document.getElementById('campo-contrato').value
+    const fecha = this.value ? new Date(this.value + 'T12:00:00').toLocaleDateString('es-VE', { day:'2-digit', month:'short', year:'numeric' }) : ''
+    document.getElementById('print-meta').textContent =
+      (contrato ? contrato + ' · ' : '') + (fecha ? fecha : 'EEE · Experiencia Exclusiva')
+  })
+  document.getElementById('campo-contrato').addEventListener('input', function() {
+    const fecha = document.getElementById('campo-fecha').value
+    const fechaFmt = fecha ? new Date(fecha + 'T12:00:00').toLocaleDateString('es-VE', { day:'2-digit', month:'short', year:'numeric' }) : ''
+    document.getElementById('print-meta').textContent =
+      (this.value ? this.value + ' · ' : '') + (fechaFmt || 'EEE · Experiencia Exclusiva')
   })
 
   // ── CHECKLIST ─────────────────────────────────────────
@@ -933,12 +1053,12 @@
   }
 
   function updateProgress() {
-    const items  = document.querySelectorAll('.check-item')
-    const done   = document.querySelectorAll('.check-item.checked')
-    const total  = items.length
-    const n      = done.length
-    const pend   = total - n
-    const pct    = total > 0 ? Math.round((n / total) * 100) : 0
+    const items = document.querySelectorAll('#checklist .check-item')
+    const done  = document.querySelectorAll('#checklist .check-item.checked')
+    const total = items.length
+    const n     = done.length
+    const pend  = total - n
+    const pct   = total > 0 ? Math.round((n / total) * 100) : 0
 
     document.getElementById('progress-fill').style.width = pct + '%'
     document.getElementById('progress-label').innerHTML =
@@ -946,24 +1066,26 @@
         ? '<span style="color:#4ade80;font-weight:700">✓ Checklist completo — listo para imprimir</span>'
         : `<span>${n} de ${total} ítems verificados</span>`
 
-    document.getElementById('chip-total').textContent = `${total} ítems`
-    document.getElementById('chip-done').textContent  = `✓ ${n} verificados`
+    document.getElementById('chip-total').textContent  = `${total} ítems`
+    document.getElementById('chip-done').textContent   = `✓ ${n} verificados`
     document.getElementById('chip-pending').textContent = `⏳ ${pend} pendientes`
-    document.getElementById('chip-done').style.display  = n > 0   ? '' : 'none'
+    document.getElementById('chip-done').style.display    = n > 0    ? '' : 'none'
     document.getElementById('chip-pending').style.display = pend > 0 ? '' : 'none'
   }
 
-  // Inicializar contadores
   updateProgress()
 
-  // ── FECHA HOY POR DEFECTO ──────────────────────────────
+  // ── CONFORMIDAD ───────────────────────────────────────
+  function toggleConformidad() {
+    const el = document.getElementById('conformidad-check')
+    el.classList.toggle('checked')
+  }
+
+  // ── FECHA HOY POR DEFECTO ─────────────────────────────
   const hoy = new Date().toISOString().split('T')[0]
   document.getElementById('campo-fecha').value = hoy
-
-  // ── IMPRIMIR ──────────────────────────────────────────
-  function imprimirFormato() {
-    window.print()
-  }
+  document.getElementById('print-meta').textContent =
+    new Date().toLocaleDateString('es-VE', { day:'2-digit', month:'short', year:'numeric' })
 </script>
 
 </body>
