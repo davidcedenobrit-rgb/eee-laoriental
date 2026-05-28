@@ -1,5 +1,12 @@
 {
   "version": 2,
-  "builds": [{ "src": "index.html", "use": "@vercel/static" }],
-  "routes": [{ "src": "/(.*)", "dest": "/index.html" }]
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" },
+    { "src": "entrega.html", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/entrega", "dest": "/entrega.html" },
+    { "src": "/entrega.html", "dest": "/entrega.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
 }
