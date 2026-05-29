@@ -478,20 +478,12 @@
 
   <!-- ─ BANNER FELICIDADES ─ -->
   <div class="felicidades-banner">
-    <!-- Foto del vehículo -->
+    <!-- Imagen del vehículo -->
     <div class="felicidades-foto-wrap">
-      <div class="photo-area" id="photo-area" onclick="document.getElementById('photo-input').click()">
-        <img id="photo-preview" src="" alt="" style="display:none" />
-        <div class="photo-placeholder" id="photo-placeholder">
-          <div class="icon">📷</div>
-          <p>Toca para cargar<br/>la foto del vehículo</p>
-          <strong>JPG · PNG · WEBP</strong>
-        </div>
+      <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(200,151,58,0.25);height:160px">
+        <img src="https://assets.cdn.filesafe.space/XZDJ4aSOAL1crWRCXyY6/media/69986711e92bc150fce37108.png"
+             alt="MG ZS" style="width:100%;height:100%;object-fit:cover" />
       </div>
-      <input type="file" id="photo-input" accept="image/*" />
-      <button class="photo-change-btn" id="photo-change-btn" onclick="document.getElementById('photo-input').click()">
-        ↺ Cambiar foto
-      </button>
     </div>
 
     <!-- Texto felicidades -->
@@ -578,7 +570,7 @@
     <div class="fields-grid">
       <div class="field field-full">
         <label>Nombre completo</label>
-        <input type="text" id="campo-cliente" placeholder="Nombre y apellido del propietario" />
+        <input type="text" id="campo-cliente" placeholder="Nombre y apellido del propietario" value="Pierre El Kareh" />
       </div>
       <div class="field">
         <label>Cédula / RIF</label>
@@ -958,7 +950,7 @@
       <div class="sig-block">
         <div class="sig-line"></div>
         <div class="sig-role">Firma del Cliente</div>
-        <div class="sig-sub" id="sig-cliente-nombre">Nombre y C.I.</div>
+        <div class="sig-sub" id="sig-cliente-nombre">Pierre El Kareh · C.I.</div>
       </div>
       <div class="sig-block">
         <div class="sig-line"></div>
@@ -987,23 +979,6 @@
 
 
 <script>
-  // ── FOTO ──────────────────────────────────────────────
-  document.getElementById('photo-input').addEventListener('change', function(e) {
-    const file = e.target.files[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = function(ev) {
-      const img = document.getElementById('photo-preview')
-      const ph  = document.getElementById('photo-placeholder')
-      const btn = document.getElementById('photo-change-btn')
-      img.src = ev.target.result
-      img.style.display = 'block'
-      ph.style.display = 'none'
-      btn.style.display = 'block'
-    }
-    reader.readAsDataURL(file)
-  })
-
   // ── NOMBRE DEL CLIENTE → BANNER ───────────────────────
   document.getElementById('campo-cliente').addEventListener('input', function() {
     const val = this.value.trim()
