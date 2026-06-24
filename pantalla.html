@@ -186,34 +186,36 @@
     .delivery-right {
       display: flex; flex-direction: column; align-items: center; gap: 20px;
     }
-    .client-photo-wrap {
+    .car-photo-wrap {
       position: relative;
+      width: clamp(260px,28vw,420px);
     }
-    .client-photo-ring {
-      position: absolute; inset: -8px; border-radius: 50%;
+    .car-photo-ring {
+      position: absolute; inset: -3px; border-radius: 26px;
       background: linear-gradient(135deg, #E8B96A, #C8973A, #9A6D1F, #E8B96A);
-      animation: spin 6s linear infinite;
-      opacity: 0.7;
+      animation: spin 8s linear infinite;
+      opacity: 0.6; z-index: 0;
     }
-    .client-photo-mask {
-      position: absolute; inset: -4px; border-radius: 50%;
-      background: #070A12;
+    .car-photo-mask {
+      position: absolute; inset: 0px; border-radius: 24px;
+      background: #070A12; z-index: 1;
     }
-    #client-photo {
-      width: clamp(200px,22vw,320px); height: clamp(200px,22vw,320px);
-      border-radius: 50%; object-fit: cover; object-position: top center;
-      position: relative; z-index: 2;
-      display: block;
+    #car-photo-display {
+      width: 100%; height: clamp(170px,18vw,260px);
+      border-radius: 22px; object-fit: cover; object-position: center;
+      position: relative; z-index: 2; display: block;
+      border: 1px solid rgba(200,151,58,0.2);
     }
-    .client-photo-initials {
-      width: clamp(200px,22vw,320px); height: clamp(200px,22vw,320px);
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(200,151,58,0.15), rgba(200,151,58,0.05));
-      border: 2px solid rgba(200,151,58,0.3);
-      display: flex; align-items: center; justify-content: center;
-      font-size: clamp(60px,8vw,100px); font-weight: 900;
-      color: #C8973A; position: relative; z-index: 2;
+    .car-photo-placeholder {
+      width: 100%; height: clamp(170px,18vw,260px);
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(200,151,58,0.08), rgba(200,151,58,0.03));
+      border: 1.5px solid rgba(200,151,58,0.25);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; position: relative; z-index: 2;
+      color: rgba(200,151,58,0.4); font-size: 48px;
     }
+    .car-photo-placeholder span { font-size: 13px; color: #475569; font-weight: 600; letter-spacing: 0.05em; }
     .delivery-date-badge {
       background: rgba(7,10,18,0.8);
       border: 1px solid rgba(200,151,58,0.25);
@@ -327,11 +329,13 @@
 
     <!-- Right: photo -->
     <div class="delivery-right anim anim-d3">
-      <div class="client-photo-wrap" id="photo-wrap">
-        <div class="client-photo-ring"></div>
-        <div class="client-photo-mask"></div>
-        <img id="client-photo" src="" alt="" style="display:none" />
-        <div id="client-initials" class="client-photo-initials">?</div>
+      <div class="car-photo-wrap" id="photo-wrap">
+        <div class="car-photo-ring"></div>
+        <div class="car-photo-mask"></div>
+        <img id="car-photo-display" src="" alt="Vehículo" style="display:none" />
+        <div id="car-photo-placeholder" class="car-photo-placeholder">
+          🚗<span>Foto del vehículo</span>
+        </div>
       </div>
 
       <div class="delivery-date-badge" id="d-date-badge">
@@ -417,16 +421,15 @@
     document.getElementById('d-nombre').textContent = d.cliente_nombre || ''
 
     // Initials or photo
-    const photoEl = document.getElementById('client-photo')
-    const initialsEl = document.getElementById('client-initials')
-    if (d.foto_cliente_url) {
-      photoEl.src = d.foto_cliente_url
-      photoEl.style.display = 'block'
-      initialsEl.style.display = 'none'
+    const carPhotoEl = document.getElementById('car-photo-display')
+    const carPlaceholderEl = document.getElementById('car-photo-placeholder')
+    if (d.foto_carro_url) {
+      carPhotoEl.src = d.foto_carro_url
+      carPhotoEl.style.display = 'block'
+      carPlaceholderEl.style.display = 'none'
     } else {
-      photoEl.style.display = 'none'
-      initialsEl.style.display = 'flex'
-      initialsEl.textContent = (d.cliente_nombre || '?').charAt(0).toUpperCase()
+      carPhotoEl.style.display = 'none'
+      carPlaceholderEl.style.display = 'flex'
     }
 
     // Car chips
