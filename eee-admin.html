@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel EEE · Invitados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:#070A12;font-family:'Inter',sans-serif;color:#E2E8F0;min-height:100vh}
+
+    #pin-gate{position:fixed;inset:0;z-index:999;background:#070A12;display:flex;align-items:center;justify-content:center}
+    .pin-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:48px 40px;max-width:380px;width:90%;text-align:center}
+    .pin-logo{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#C8973A,#9A6D1F);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#070A12;margin:0 auto 20px}
+    .pin-input{width:100%;padding:16px;font-size:24px;letter-spacing:.5em;text-align:center;font-weight:700;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;color:#fff;outline:none;margin:24px 0 16px}
+    .pin-input:focus{border-color:#C8973A}
+    .pin-error{color:#EF4444;font-size:13px;margin-top:8px;min-height:20px}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .2s;font-family:'Inter',sans-serif}
+    .btn-gold{background:linear-gradient(135deg,#E8B96A,#C8973A);color:#070A12;width:100%}
+    .btn-gold:hover{opacity:.9;transform:translateY(-1px)}
+    .btn-outline{background:transparent;color:#94A3B8;border:1px solid rgba(255,255,255,0.1)}
+    .btn-outline:hover{border-color:rgba(255,255,255,0.2);color:#fff}
+    .btn-sm{padding:7px 14px;font-size:12px;width:auto}
+    .btn-danger{background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2);padding:7px 14px;font-size:12px;width:auto;font-family:'Inter',sans-serif;border-radius:10px;cursor:pointer;font-weight:700}
+    .btn-ghost{background:rgba(255,255,255,0.04);color:#94A3B8;border:1px solid rgba(255,255,255,0.08);padding:7px 14px;font-size:12px;width:auto;font-family:'Inter',sans-serif;border-radius:10px;cursor:pointer;font-weight:700}
+    .btn-save{background:linear-gradient(135deg,#E8B96A,#C8973A);color:#070A12;border:none;padding:7px 14px;font-size:12px;width:auto;font-family:'Inter',sans-serif;border-radius:10px;cursor:pointer;font-weight:700}
+
+    #main-panel{display:none}
+    .topbar{background:rgba(7,10,18,0.95);border-bottom:1px solid rgba(255,255,255,0.06);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;backdrop-filter:blur(16px);flex-wrap:wrap;gap:12px}
+    .logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#C8973A,#9A6D1F);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#070A12}
+    .content{max-width:700px;margin:0 auto;padding:32px 24px}
+    .card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:28px}
+    .card-title{font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#C8973A;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .card-title-left{display:flex;align-items:center;gap:8px}
+    .card-title-left::before{content:'';display:block;width:20px;height:1px;background:linear-gradient(to right,#C8973A,transparent)}
+
+    input[type=text]{width:100%;padding:12px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:#fff;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+    input[type=text]:focus{border-color:#C8973A}
+
+    .inv-list{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+    .inv-row{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:10px 14px;transition:border-color .2s}
+    .inv-row:hover{border-color:rgba(200,151,58,0.2)}
+    .inv-dot{width:6px;height:6px;border-radius:50%;background:#C8973A;flex-shrink:0}
+    .inv-name{flex:1;font-size:14px;font-weight:600;color:#fff}
+    .inv-edit-input{flex:1;background:transparent;border:none;border-bottom:1px solid #C8973A;outline:none;font-size:14px;font-weight:600;color:#fff;font-family:'Inter',sans-serif;padding:2px 0}
+    .inv-actions{display:flex;gap:6px;flex-shrink:0;align-items:center}
+    .add-row{display:flex;gap:10px;margin-top:16px}
+    .add-row input{flex:1}
+    .add-btn{background:linear-gradient(135deg,#E8B96A,#C8973A);color:#070A12;border:none;padding:12px 20px;font-size:14px;font-weight:700;border-radius:12px;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;white-space:nowrap}
+    .add-btn:hover{opacity:.9}
+    .order-btn{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#64748B;border-radius:6px;padding:4px 8px;cursor:pointer;font-size:11px;line-height:1}
+    .order-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2)}
+    .order-btn.disabled{opacity:.2;cursor:default;pointer-events:none}
+
+    #toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1E293B;border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 20px;display:flex;align-items:center;gap:10px;font-size:14px;color:#E2E8F0;transform:translateY(80px);opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+    #toast.show{transform:translateY(0);opacity:1}
+
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+    .live-dot{width:6px;height:6px;border-radius:50%;background:#22C55E;display:inline-block;animation:pulse 2s infinite;margin-right:4px}
+    .preview-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#C8973A;text-decoration:none;padding:6px 12px;border:1px solid rgba(200,151,58,0.2);border-radius:8px;transition:all .2s}
+    .preview-link:hover{background:rgba(200,151,58,0.08)}
+    .hint-box{margin-top:16px;padding:16px 20px;background:rgba(200,151,58,0.05);border:1px solid rgba(200,151,58,0.15);border-radius:14px}
+  </style>
+</head>
+<body>
+
+<!-- PIN GATE -->
+<div id="pin-gate">
+  <div class="pin-card">
+    <div class="pin-logo">LO</div>
+    <p style="font-size:18px;font-weight:800;color:#fff;margin-bottom:4px">Panel EEE</p>
+    <p style="font-size:13px;color:#64748B">Gestión de invitados · La Oriental Automotors</p>
+    <input type="password" id="pin-input" class="pin-input" placeholder="Ingresa el PIN" maxlength="6" autocomplete="off" />
+    <button class="btn btn-gold" onclick="checkPin()">Entrar</button>
+    <p id="pin-error" class="pin-error"></p>
+  </div>
+</div>
+
+<!-- MAIN PANEL -->
+<div id="main-panel">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="logo-mark">LO</div>
+      <div>
+        <p style="font-size:14px;font-weight:800;color:#fff">Panel EEE · Invitados</p>
+        <p style="font-size:11px;color:#64748B">La Oriental Automotors</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <a href="/" target="_blank" class="preview-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Ver web EEE
+      </a>
+      <a href="/admin" class="preview-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Panel entregas
+      </a>
+      <button onclick="logout()" class="btn btn-outline btn-sm">Salir</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="card">
+      <div class="card-title">
+        <div class="card-title-left">Lista de invitados</div>
+        <span style="display:flex;align-items:center;font-size:11px;color:#22C55E;font-weight:600;letter-spacing:0">
+          <span class="live-dot"></span>En vivo · se actualiza al recargar la web
+        </span>
+      </div>
+
+      <p style="font-size:13px;color:#64748B;margin-bottom:20px;line-height:1.6">
+        Edita, reordena o agrega invitados. Los cambios se reflejan en la web principal cuando alguien recarga la página.
+      </p>
+
+      <div id="inv-list" class="inv-list">
+        <div style="text-align:center;padding:24px;color:#475569;font-size:13px">Cargando...</div>
+      </div>
+
+      <div class="add-row">
+        <input type="text" id="new-name" placeholder="Nombre completo del invitado (Ej: Sr. Juan García)" />
+        <button class="add-btn" onclick="addInvitado()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar
+        </button>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      <p style="font-size:12px;color:#94A3B8;line-height:1.7">
+        <strong style="color:#C8973A">💡 Cómo funciona:</strong>
+        Los invitados viven en la nube. La web EEE los carga cada vez que alguien la abre. Si ya la tienen abierta, deben refrescar para ver los cambios. Puedes subir y bajar el orden con las flechas.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div id="toast">
+  <span id="toast-icon">✅</span>
+  <span id="toast-msg">Listo</span>
+</div>
+
+<script>
+  const SB_URL = 'https://kxhdqbbcattholltloux.supabase.co'
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4aGRxYmJjYXR0aG9sbHRsb3V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNjIyNjUsImV4cCI6MjA4ODYzODI2NX0.CBHhMQyC-8wzLsxp8xVddWYOYpE04Tdz7FjtL_uQGwk'
+  const PIN = '2025'
+  const db = supabase.createClient(SB_URL, SB_KEY)
+
+  // ── PIN ──
+  function checkPin() {
+    const val = document.getElementById('pin-input').value.trim()
+    if (val === PIN) {
+      sessionStorage.setItem('eee-inv', '1')
+      showPanel()
+    } else {
+      document.getElementById('pin-error').textContent = 'PIN incorrecto.'
+      document.getElementById('pin-input').value = ''
+      document.getElementById('pin-input').focus()
+    }
+  }
+  document.getElementById('pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPin() })
+  function logout() { sessionStorage.removeItem('eee-inv'); location.reload() }
+  function showPanel() {
+    document.getElementById('pin-gate').style.display = 'none'
+    document.getElementById('main-panel').style.display = 'block'
+    loadInvitados()
+  }
+  if (sessionStorage.getItem('eee-inv') === '1') showPanel()
+
+  // ── Toast ──
+  let tt
+  function toast(msg, icon = '✅') {
+    document.getElementById('toast-msg').textContent = msg
+    document.getElementById('toast-icon').textContent = icon
+    document.getElementById('toast').classList.add('show')
+    clearTimeout(tt)
+    tt = setTimeout(() => document.getElementById('toast').classList.remove('show'), 3000)
+  }
+
+  // ── Data ──
+  let invitados = []
+
+  async function loadInvitados() {
+    const { data, error } = await db.from('eee_invitados')
+      .select('*').eq('activo', true).order('orden', { ascending: true })
+    if (error) { toast('Error al cargar', '❌'); return }
+    invitados = data || []
+    renderList()
+  }
+
+  function esc(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+  }
+
+  function renderList() {
+    const el = document.getElementById('inv-list')
+    if (!invitados.length) {
+      el.innerHTML = '<div style="text-align:center;padding:32px;color:#475569;font-size:14px">No hay invitados. Agrega el primero abajo.</div>'
+      return
+    }
+    el.innerHTML = invitados.map((inv, i) => `
+      <div class="inv-row" id="row-${inv.id}">
+        <div class="inv-dot"></div>
+        <div class="inv-name" id="label-${inv.id}">${esc(inv.nombre)}</div>
+        <input type="text" class="inv-edit-input" id="edit-${inv.id}" value="${esc(inv.nombre)}" style="display:none" onkeydown="if(event.key==='Enter')saveEdit('${inv.id}')" />
+        <div class="inv-actions">
+          <button class="order-btn ${i === 0 ? 'disabled' : ''}" onclick="moveUp('${inv.id}')">▲</button>
+          <button class="order-btn ${i === invitados.length - 1 ? 'disabled' : ''}" onclick="moveDown('${inv.id}')">▼</button>
+          <button class="btn-ghost" id="edit-btn-${inv.id}" onclick="startEdit('${inv.id}')">Editar</button>
+          <button class="btn-danger" onclick="deleteInv('${inv.id}')">✕</button>
+        </div>
+      </div>`).join('')
+  }
+
+  function startEdit(id) {
+    const label = document.getElementById('label-' + id)
+    const input = document.getElementById('edit-' + id)
+    const btn   = document.getElementById('edit-btn-' + id)
+    label.style.display = 'none'
+    input.style.display = 'block'
+    input.focus(); input.select()
+    btn.textContent = 'Guardar'
+    btn.className = 'btn-save'
+    btn.setAttribute('onclick', `saveEdit('${id}')`)
+    document.getElementById('row-' + id).style.borderColor = '#C8973A'
+  }
+
+  async function saveEdit(id) {
+    const input = document.getElementById('edit-' + id)
+    const nombre = input.value.trim()
+    if (!nombre) { toast('El nombre no puede estar vacío', '⚠️'); return }
+    const { error } = await db.from('eee_invitados').update({ nombre }).eq('id', id)
+    if (error) { toast('Error al guardar', '❌'); return }
+    const inv = invitados.find(x => x.id === id)
+    if (inv) inv.nombre = nombre
+    renderList()
+    toast('Nombre actualizado ✓')
+  }
+
+  async function deleteInv(id) {
+    const inv = invitados.find(x => x.id === id)
+    if (!confirm(`¿Eliminar a ${inv ? inv.nombre : 'este invitado'}?`)) return
+    const { error } = await db.from('eee_invitados').delete().eq('id', id)
+    if (error) { toast('Error al eliminar', '❌'); return }
+    invitados = invitados.filter(x => x.id !== id)
+    renderList()
+    toast('Invitado eliminado', '🗑️')
+  }
+
+  async function moveUp(id) {
+    const i = invitados.findIndex(x => x.id === id)
+    if (i <= 0) return
+    await swapOrder(i, i - 1)
+  }
+
+  async function moveDown(id) {
+    const i = invitados.findIndex(x => x.id === id)
+    if (i >= invitados.length - 1) return
+    await swapOrder(i, i + 1)
+  }
+
+  async function swapOrder(i, j) {
+    const a = invitados[i], b = invitados[j]
+    const oa = a.orden, ob = b.orden
+    await Promise.all([
+      db.from('eee_invitados').update({ orden: ob }).eq('id', a.id),
+      db.from('eee_invitados').update({ orden: oa }).eq('id', b.id),
+    ])
+    invitados[i] = { ...b, orden: oa }
+    invitados[j] = { ...a, orden: ob }
+    renderList()
+    toast('Orden actualizado', '↕️')
+  }
+
+  async function addInvitado() {
+    const inp = document.getElementById('new-name')
+    const nombre = inp.value.trim()
+    if (!nombre) { inp.focus(); return }
+    const maxOrden = invitados.length ? Math.max(...invitados.map(x => x.orden)) : 0
+    const { data, error } = await db.from('eee_invitados')
+      .insert({ nombre, orden: maxOrden + 1, activo: true }).select().single()
+    if (error) { toast('Error al agregar', '❌'); console.error(error); return }
+    invitados.push(data)
+    renderList()
+    inp.value = ''
+    inp.focus()
+    toast(`${nombre} agregado ✓`, '🎉')
+  }
+
+  document.getElementById('new-name').addEventListener('keydown', e => { if (e.key === 'Enter') addInvitado() })
+</script>
+</body>
+</html>

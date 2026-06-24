@@ -297,6 +297,7 @@
       .vehicles-track { gap: 16px; padding: 4px 0 24px; }
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -387,26 +388,10 @@
           <p style="font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#C8973A">Invitados exclusivos</p>
           <div style="flex:1;height:1px;background:linear-gradient(to right,#C8973A,transparent)"></div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-            <span style="width:6px;height:6px;border-radius:50%;background:#C8973A;flex-shrink:0"></span>
-            <span style="font-size:14px;font-weight:600;color:#fff">Dra. Margira Márquez</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-            <span style="width:6px;height:6px;border-radius:50%;background:#C8973A;flex-shrink:0"></span>
-            <span style="font-size:14px;font-weight:600;color:#fff">Sr. César Enrique Viña</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-            <span style="width:6px;height:6px;border-radius:50%;background:#C8973A;flex-shrink:0"></span>
-            <span style="font-size:14px;font-weight:600;color:#fff">Sra. Anabel Alves</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-            <span style="width:6px;height:6px;border-radius:50%;background:#C8973A;flex-shrink:0"></span>
-            <span style="font-size:14px;font-weight:600;color:#fff">Sra. Dayana Bello</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">
-            <span style="width:6px;height:6px;border-radius:50%;background:#C8973A;flex-shrink:0"></span>
-            <span style="font-size:14px;font-weight:600;color:#fff">Sr. Gilberto Brito</span>
+        <div id="invitados-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)">
+            <span style="width:6px;height:6px;border-radius:50%;background:rgba(200,151,58,0.3);flex-shrink:0"></span>
+            <span style="font-size:13px;color:#475569">Cargando...</span>
           </div>
         </div>
         <p style="font-size:11px;color:#64748b;text-align:center;margin-top:16px;letter-spacing:0.05em">Acceso exclusivo · La Oriental Automotors EEE 2025</p>
@@ -1591,5 +1576,32 @@ setTimeout(() => {
 }, 100);
 </script>
 
+
+<script>
+(function() {
+  var db = supabase.createClient(
+    'https://kxhdqbbcattholltloux.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4aGRxYmJjYXR0aG9sbHRsb3V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNjIyNjUsImV4cCI6MjA4ODYzODI2NX0.CBHhMQyC-8wzLsxp8xVddWYOYpE04Tdz7FjtL_uQGwk'
+  );
+  function renderItem(nombre) {
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06)">'
+      + '<span style="width:6px;height:6px;border-radius:50%;background:#C8973A;flex-shrink:0"></span>'
+      + '<span style="font-size:14px;font-weight:600;color:#fff">' + nombre + '</span>'
+      + '</div>';
+  }
+  async function loadInvitados() {
+    var grid = document.getElementById('invitados-grid');
+    if (!grid) return;
+    var res = await db.from('eee_invitados').select('nombre').eq('activo', true).order('orden', { ascending: true });
+    if (res.error || !res.data || !res.data.length) return;
+    grid.innerHTML = res.data.map(function(inv){ return renderItem(inv.nombre); }).join('');
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadInvitados);
+  } else {
+    loadInvitados();
+  }
+})();
+</script>
 </body>
 </html>
