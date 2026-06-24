@@ -438,7 +438,54 @@
     }
     /* En pantalla, ocultar el header de impresión */
     .print-header { display: none; }
+
+    /* ── Firma digital ── */
+    .sig-canvas-wrap {
+      border: 1.5px dashed rgba(200,151,58,0.4);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      overflow: hidden;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .sig-canvas-wrap canvas { display: block; width: 100%; height: 110px; }
+    .sig-clear-btn {
+      margin-top: 6px; padding: 5px 12px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: #64748B; font-size: 11px; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s;
+    }
+    .sig-clear-btn:hover { color: #EF4444; border-color: rgba(239,68,68,0.3); }
+    @media print {
+      .sig-canvas-wrap { border: 1px solid #d1d5db !important; background: #fff !important; }
+      .sig-clear-btn { display: none !important; }
+    }
+
+    /* ── Firma digital ── */
+    .sig-canvas-wrap {
+      border: 1.5px dashed rgba(200,151,58,0.4);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      overflow: hidden;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .sig-canvas-wrap canvas { display: block; width: 100%; height: 110px; }
+    .sig-clear-btn {
+      margin-top: 6px; padding: 5px 12px;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px; color: #64748B; font-size: 11px; font-weight: 600;
+      cursor: pointer; font-family: 'Inter', sans-serif; transition: all .2s;
+      display: inline-block;
+    }
+    .sig-clear-btn:hover { color: #EF4444; border-color: rgba(239,68,68,0.3); }
+    @media print {
+      .sig-canvas-wrap { border: 1px solid #d1d5db !important; background: #fff !important; -webkit-print-color-adjust: exact; }
+      .sig-clear-btn { display: none !important; }
+      .sig-canvas-wrap canvas { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
@@ -939,20 +986,27 @@
       </div>
     </div>
 
-    <!-- Firma cliente y asesor -->
+    <!-- Firma digital cliente y asesor -->
     <div class="conformidad-firma-grid">
       <div class="sig-block">
-        <div class="sig-line"></div>
-        <div class="sig-role">Firma del Cliente</div>
-        <div class="sig-sub" id="sig-cliente-nombre">Jonahta Leon · C.I.</div>
+        <p style="font-size:11px;color:#64748B;margin-bottom:8px;letter-spacing:.05em">✍️ FIRMA DIGITAL DEL CLIENTE</p>
+        <div class="sig-canvas-wrap">
+          <canvas id="canvas-cliente" height="110"></canvas>
+        </div>
+        <button class="sig-clear-btn" onclick="clearSig('cliente')">&#10005; Borrar firma</button>
+        <div class="sig-role" style="margin-top:8px">Firma del Cliente</div>
+        <div class="sig-sub" id="sig-cliente-nombre">Nombre · C.I.</div>
       </div>
       <div class="sig-block">
-        <div class="sig-line"></div>
-        <div class="sig-role">Asesor de Ventas</div>
+        <p style="font-size:11px;color:#64748B;margin-bottom:8px;letter-spacing:.05em">✍️ FIRMA DEL ASESOR</p>
+        <div class="sig-canvas-wrap">
+          <canvas id="canvas-asesor" height="110"></canvas>
+        </div>
+        <button class="sig-clear-btn" onclick="clearSig('asesor')">&#10005; Borrar firma</button>
+        <div class="sig-role" style="margin-top:8px">Asesor de Ventas</div>
         <div class="sig-sub" id="sig-asesor-nombre">Nombre y firma</div>
       </div>
     </div>
-
     <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);text-align:center;font-size:11px;color:#475569;">
       Documento EEE · La Oriental Automotors MG &amp; Maxus · Maturín, Venezuela
     </div>
@@ -1055,6 +1109,131 @@
   document.getElementById('campo-fecha').value = hoy
   document.getElementById('print-meta').textContent =
     new Date().toLocaleDateString('es-VE', { day:'2-digit', month:'short', year:'numeric' })
+
+
+  // ── FIRMA DIGITAL ─────────────────────────────────────
+  function initSig(id) {
+    const canvas = document.getElementById('canvas-' + id);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    // High-DPI
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width  = (rect.width  || 300) * dpr;
+    canvas.height = 110 * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+
+    let drawing = false;
+
+    function pos(e) {
+      const r = canvas.getBoundingClientRect();
+      const src = e.touches ? e.touches[0] : e;
+      return {
+        x: (src.clientX - r.left),
+        y: (src.clientY - r.top)
+      };
+    }
+
+    canvas.addEventListener('mousedown',  (e) => { drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x, p.y); e.preventDefault(); });
+    canvas.addEventListener('mousemove',  (e) => { if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); });
+    canvas.addEventListener('mouseup',    ()  => drawing = false);
+    canvas.addEventListener('mouseleave', ()  => drawing = false);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x, p.y); }, { passive: false });
+    canvas.addEventListener('touchmove',  (e) => { e.preventDefault(); if (!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); }, { passive: false });
+    canvas.addEventListener('touchend',   ()  => drawing = false);
+  }
+
+  function clearSig(id) {
+    const canvas = document.getElementById('canvas-' + id);
+    if (!canvas) return;
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Init after DOM ready
+  window.addEventListener('load', () => {
+    ['cliente', 'asesor'].forEach(id => {
+      // Set canvas width to match display size
+      const wrap = document.querySelector('#canvas-' + id)?.parentElement;
+      if (wrap) {
+        const w = wrap.offsetWidth || 300;
+        document.getElementById('canvas-' + id).width = w;
+      }
+      initSig(id);
+    });
+  });
+
+  // ── AUTO-CARGA DESDE SUPABASE ─────────────────────────
+  (async function() {
+    try {
+      const sb = supabase.createClient(
+        'https://kxhdqbbcattholltloux.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4aGRxYmJjYXR0aG9sbHRsb3V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNjIyNjUsImV4cCI6MjA4ODYzODI2NX0.CBHhMQyC-8wzLsxp8xVddWYOYpE04Tdz7FjtL_uQGwk'
+      );
+      const { data } = await sb.from('eee_entregas').select('*').eq('activa', true).limit(1).maybeSingle();
+      if (!data) return;
+
+      // Nombre cliente
+      if (data.cliente_nombre) {
+        const fullName = ((data.tratamiento || '') + ' ' + data.cliente_nombre).trim();
+        const inp = document.getElementById('campo-cliente');
+        if (inp) { inp.value = fullName; inp.dispatchEvent(new Event('input')); }
+      }
+      // Modelo
+      if (data.modelo) {
+        const sel = document.getElementById('campo-modelo');
+        if (sel) {
+          // Try exact match first
+          let matched = false;
+          for (const opt of sel.options) {
+            if (opt.text === data.modelo || opt.value === data.modelo) {
+              sel.value = opt.value; matched = true; break;
+            }
+          }
+          if (!matched) {
+            // Add it as new option and select
+            const opt = new Option(data.modelo, data.modelo, true, true);
+            sel.add(opt);
+          }
+          sel.dispatchEvent(new Event('change'));
+        }
+      }
+      // Marca
+      if (data.marca) {
+        const sel = document.getElementById('campo-marca');
+        if (sel) { sel.value = data.marca; sel.dispatchEvent(new Event('change')); }
+      }
+      // Color
+      if (data.color) {
+        const inp = document.getElementById('campo-color');
+        if (inp) inp.value = data.color;
+      }
+      // Año
+      if (data.año) {
+        const inp = document.getElementById('campo-anio');
+        if (inp) inp.value = data.año;
+      }
+      // Placa
+      if (data.placa) {
+        const inp = document.getElementById('campo-placa');
+        if (inp) inp.value = data.placa.toUpperCase();
+      }
+      // Fecha
+      if (data.fecha_entrega) {
+        const inp = document.getElementById('campo-fecha');
+        if (inp) { inp.value = data.fecha_entrega; inp.dispatchEvent(new Event('change')); }
+      }
+      // Foto del carro en el banner
+      if (data.foto_carro_url) {
+        const img = document.querySelector('.felicidades-foto-wrap img');
+        if (img) img.src = data.foto_carro_url;
+      }
+    } catch(e) { /* silently fail */ }
+  })();
+
 </script>
 
 </body>

@@ -372,18 +372,6 @@
               <textarea id="f-notas" placeholder="Observaciones, detalles especiales..."></textarea>
             </div>
 
-            <!-- Foto cliente -->
-            <div class="form-group">
-              <label>Foto del cliente</label>
-              <div class="photo-upload-area" id="zona-cliente" onclick="document.getElementById('input-foto-cliente').click()">
-                <img id="preview-cliente" class="photo-preview" src="" alt="preview" />
-                <p class="upload-label-text">Toca para subir foto del cliente</p>
-                <p id="name-foto-cliente" class="upload-filename"></p>
-                <p id="spin-cliente" class="uploading-spinner">Subiendo...</p>
-              </div>
-              <input type="file" id="input-foto-cliente" class="photo-input" accept="image/*" onchange="handlePhotoUpload('cliente')" />
-              <input type="hidden" id="url-foto-cliente" />
-            </div>
 
             <!-- Foto carro -->
             <div class="form-group">
@@ -537,7 +525,6 @@
       placa:          document.getElementById('f-placa').value.trim().toUpperCase(),
       fecha_entrega:  document.getElementById('f-fecha').value,
       notas:          document.getElementById('f-notas').value.trim(),
-      foto_cliente_url: document.getElementById('url-foto-cliente').value,
       foto_carro_url:   document.getElementById('url-foto-carro').value,
       activa: true,
     }
@@ -562,7 +549,7 @@
   function resetForm() {
     document.getElementById('delivery-form').reset()
     document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0]
-    ;['cliente', 'carro'].forEach(t => {
+    ;['carro'].forEach(t => {
       document.getElementById(`preview-${t}`).classList.remove('visible')
       document.getElementById(`preview-${t}`).src = ''
       document.getElementById(`name-foto-${t}`).textContent = ''
