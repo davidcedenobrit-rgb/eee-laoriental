@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Admin · EEE La Oriental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #070A12;
+      font-family: 'Inter', sans-serif;
+      color: #E2E8F0;
+      min-height: 100vh;
+    }
+
+    /* ── PIN Gate ── */
+    #pin-gate {
+      position: fixed; inset: 0; z-index: 999;
+      background: #070A12;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pin-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 48px 40px;
+      max-width: 380px; width: 90%;
+      text-align: center;
+    }
+    .pin-logo {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: linear-gradient(135deg,#C8973A,#9A6D1F);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: #070A12;
+      margin: 0 auto 20px;
+    }
+    .pin-input {
+      width: 100%; padding: 16px; font-size: 24px; letter-spacing: 0.5em;
+      text-align: center; font-weight: 700;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px; color: #fff; outline: none;
+      margin: 24px 0 16px;
+    }
+    .pin-input:focus { border-color: #C8973A; }
+    .pin-input::placeholder { letter-spacing: 0.2em; color: #475569; font-size: 14px; }
+    .pin-error { color: #EF4444; font-size: 13px; margin-top: 8px; min-height: 20px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 24px; border-radius: 12px; font-size: 14px; font-weight: 700;
+      cursor: pointer; border: none; transition: all 0.2s; width: 100%;
+    }
+    .btn-gold {
+      background: linear-gradient(135deg,#E8B96A,#C8973A);
+      color: #070A12;
+    }
+    .btn-gold:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-outline {
+      background: transparent; color: #94A3B8;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.2); color: #fff; }
+    .btn-danger {
+      background: rgba(239,68,68,0.1); color: #EF4444;
+      border: 1px solid rgba(239,68,68,0.2);
+      padding: 6px 12px; font-size: 12px; width: auto;
+    }
+    .btn-activate {
+      background: rgba(200,151,58,0.1); color: #C8973A;
+      border: 1px solid rgba(200,151,58,0.2);
+      padding: 6px 12px; font-size: 12px; width: auto;
+    }
+    .btn-sm { padding: 8px 16px; font-size: 13px; width: auto; }
+
+    /* ── Layout ── */
+    #main-panel { display: none; }
+    .topbar {
+      background: rgba(7,10,18,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(16px);
+    }
+    .topbar-logo {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .logo-mark {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg,#C8973A,#9A6D1F);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 900; color: #070A12;
+    }
+    .content { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Cards ── */
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 20px;
+      padding: 28px;
+    }
+    .card-title {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+      text-transform: uppercase; color: #C8973A; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title::before {
+      content: ''; display: block;
+      width: 20px; height: 1px;
+      background: linear-gradient(to right, #C8973A, transparent);
+    }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    label {
+      display: block; font-size: 11px; font-weight: 600; color: #94A3B8;
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+    }
+    input[type=text], input[type=date], select, textarea {
+      width: 100%; padding: 12px 14px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; color: #fff; font-size: 14px; font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color 0.2s;
+    }
+    input[type=text]:focus, input[type=date]:focus, select:focus, textarea:focus {
+      border-color: #C8973A;
+    }
+    select option { background: #0F172A; }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* ── Photo upload ── */
+    .photo-upload-area {
+      border: 2px dashed rgba(200,151,58,0.3);
+      border-radius: 14px; padding: 20px;
+      text-align: center; cursor: pointer;
+      transition: all 0.2s; position: relative;
+    }
+    .photo-upload-area:hover { border-color: rgba(200,151,58,0.6); background: rgba(200,151,58,0.04); }
+    .photo-upload-area.has-photo { border-style: solid; border-color: rgba(200,151,58,0.5); }
+    .photo-preview {
+      width: 100%; max-height: 180px; object-fit: cover;
+      border-radius: 10px; display: none; margin-bottom: 10px;
+    }
+    .photo-preview.visible { display: block; }
+    .photo-input { display: none; }
+    .upload-label-text { font-size: 13px; color: #64748B; }
+    .upload-filename { font-size: 12px; color: #C8973A; margin-top: 4px; }
+    .uploading-spinner {
+      display: none; font-size: 12px; color: #C8973A; margin-top: 8px;
+    }
+
+    /* ── Active badge ── */
+    .badge-active {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25);
+      color: #22C55E; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600;
+    }
+    .badge-active::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #22C55E; display: inline-block;
+      animation: pulse 2s infinite;
+    }
+    .badge-inactive {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(100,116,139,0.1); border: 1px solid rgba(100,116,139,0.2);
+      color: #64748B; border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 600;
+    }
+
+    /* ── History table ── */
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #475569; padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06); text-align: left;
+    }
+    .history-table td {
+      padding: 14px 12px; font-size: 13px; color: #CBD5E1;
+      border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle;
+    }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .client-thumb {
+      width: 36px; height: 36px; border-radius: 50%;
+      object-fit: cover; border: 2px solid rgba(200,151,58,0.3);
+      vertical-align: middle;
+    }
+    .client-thumb-placeholder {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(200,151,58,0.1); border: 2px solid rgba(200,151,58,0.2);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 14px; color: #C8973A; font-weight: 700;
+      vertical-align: middle;
+    }
+    .td-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      background: #1E293B; border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px; padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+      font-size: 14px; color: #E2E8F0;
+      transform: translateY(80px); opacity: 0;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast .toast-icon { font-size: 20px; flex-shrink: 0; }
+
+    /* ── Loading overlay ── */
+    .loading-text { font-size: 12px; color: #64748B; text-align: center; padding: 24px; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ── Stats ── */
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+    .stat-card {
+      background: rgba(200,151,58,0.05); border: 1px solid rgba(200,151,58,0.15);
+      border-radius: 14px; padding: 16px; text-align: center;
+    }
+    .stat-num { font-size: 28px; font-weight: 900; color: #C8973A; }
+    .stat-label { font-size: 11px; color: #64748B; margin-top: 2px; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center; padding: 40px 20px; color: #475569;
+    }
+    .empty-state-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.5; }
+
+    /* ── Preview link ── */
+    .preview-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: #C8973A; text-decoration: none;
+      padding: 6px 12px; border: 1px solid rgba(200,151,58,0.2);
+      border-radius: 8px; transition: all 0.2s;
+    }
+    .preview-link:hover { background: rgba(200,151,58,0.08); }
+  </style>
+</head>
+<body>
+
+<!-- ══ PIN GATE ══ -->
+<div id="pin-gate">
+  <div class="pin-card">
+    <div class="pin-logo">LO</div>
+    <p style="font-size:18px;font-weight:800;color:#fff;margin-bottom:4px">Panel EEE</p>
+    <p style="font-size:13px;color:#64748B">La Oriental Automotors · Acceso interno</p>
+    <input type="password" id="pin-input" class="pin-input" placeholder="Ingresa el PIN" maxlength="6" autocomplete="off" />
+    <button class="btn btn-gold" onclick="checkPin()">Entrar</button>
+    <p id="pin-error" class="pin-error"></p>
+  </div>
+</div>
+
+<!-- ══ MAIN PANEL ══ -->
+<div id="main-panel">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="logo-mark">LO</div>
+      <div>
+        <p style="font-size:14px;font-weight:800;color:#fff">Panel de Entregas</p>
+        <p style="font-size:11px;color:#64748B">EEE · La Oriental Automotors</p>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <a href="/pantalla" target="_blank" class="preview-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Ver pantalla
+      </a>
+      <button onclick="logout()" class="btn btn-outline btn-sm">Salir</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Stats -->
+    <div class="stats-row" id="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-total">—</div>
+        <div class="stat-label">Entregas totales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-month">—</div>
+        <div class="stat-label">Este mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-active">—</div>
+        <div class="stat-label">Activa hoy</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+
+      <!-- ── FORM nueva entrega ── -->
+      <div>
+        <div class="card">
+          <div class="card-title">Nueva entrega</div>
+
+          <form id="delivery-form" onsubmit="saveDelivery(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tratamiento</label>
+                <select id="f-tratamiento">
+                  <option value="">Sin tratamiento</option>
+                  <option value="Sr.">Sr.</option>
+                  <option value="Sra.">Sra.</option>
+                  <option value="Dr.">Dr.</option>
+                  <option value="Dra.">Dra.</option>
+                  <option value="Lic.">Lic.</option>
+                  <option value="Ing.">Ing.</option>
+                  <option value="Prof.">Prof.</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Fecha de entrega</label>
+                <input type="date" id="f-fecha" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Nombre completo del cliente *</label>
+              <input type="text" id="f-nombre" placeholder="Ej: María González" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Marca</label>
+                <select id="f-marca">
+                  <option value="MG">MG</option>
+                  <option value="MAXUS">MAXUS</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Modelo *</label>
+                <input type="text" id="f-modelo" placeholder="Ej: MG ZS New" required />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>Año</label>
+                <input type="text" id="f-año" placeholder="2025" />
+              </div>
+              <div class="form-group">
+                <label>Color</label>
+                <input type="text" id="f-color" placeholder="Blanco Perla" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Placa</label>
+              <input type="text" id="f-placa" placeholder="AB123CD" style="text-transform:uppercase" />
+            </div>
+
+            <div class="form-group">
+              <label>Notas internas</label>
+              <textarea id="f-notas" placeholder="Observaciones, detalles especiales..."></textarea>
+            </div>
+
+            <!-- Foto cliente -->
+            <div class="form-group">
+              <label>Foto del cliente</label>
+              <div class="photo-upload-area" id="zona-cliente" onclick="document.getElementById('input-foto-cliente').click()">
+                <img id="preview-cliente" class="photo-preview" src="" alt="preview" />
+                <p class="upload-label-text">Toca para subir foto del cliente</p>
+                <p id="name-foto-cliente" class="upload-filename"></p>
+                <p id="spin-cliente" class="uploading-spinner">Subiendo...</p>
+              </div>
+              <input type="file" id="input-foto-cliente" class="photo-input" accept="image/*" onchange="handlePhotoUpload('cliente')" />
+              <input type="hidden" id="url-foto-cliente" />
+            </div>
+
+            <!-- Foto carro -->
+            <div class="form-group">
+              <label>Foto del vehículo</label>
+              <div class="photo-upload-area" id="zona-carro" onclick="document.getElementById('input-foto-carro').click()">
+                <img id="preview-carro" class="photo-preview" src="" alt="preview" />
+                <p class="upload-label-text">Toca para subir foto del carro</p>
+                <p id="name-foto-carro" class="upload-filename"></p>
+                <p id="spin-carro" class="uploading-spinner">Subiendo...</p>
+              </div>
+              <input type="file" id="input-foto-carro" class="photo-input" accept="image/*" onchange="handlePhotoUpload('carro')" />
+              <input type="hidden" id="url-foto-carro" />
+            </div>
+
+            <button type="submit" class="btn btn-gold" id="btn-save">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+              Publicar como entrega activa
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- ── HISTORIAL ── -->
+      <div>
+        <div class="card" style="height:100%;overflow-y:auto">
+          <div class="card-title" style="justify-content:space-between">
+            <span>Historial de entregas</span>
+            <span id="hist-count" style="font-size:11px;color:#475569;font-weight:500;letter-spacing:0"></span>
+          </div>
+          <div id="history-container">
+            <div class="loading-text">Cargando historial...</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast">
+  <span class="toast-icon" id="toast-icon">✅</span>
+  <span id="toast-msg">Operación completada</span>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://twrskadsskiiskrqdvaj.supabase.co'
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3cnNrYWRzc2tpaXNrcnFkdmFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NTU4MjcsImV4cCI6MjA5NDEzMTgyN30.XGzVDHBb06cDDhWWt7t-BJ-iczneQC3CS-aM1NhUttU'
+  const PIN = '2025'
+  const BUCKET = 'eee-fotos'
+
+  const { createClient } = supabase
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+  // ── PIN ──
+  function checkPin() {
+    const val = document.getElementById('pin-input').value.trim()
+    if (val === PIN) {
+      sessionStorage.setItem('eee-auth', '1')
+      showPanel()
+    } else {
+      document.getElementById('pin-error').textContent = 'PIN incorrecto. Intenta de nuevo.'
+      document.getElementById('pin-input').value = ''
+      document.getElementById('pin-input').focus()
+    }
+  }
+  document.getElementById('pin-input').addEventListener('keydown', e => { if (e.key === 'Enter') checkPin() })
+
+  function logout() {
+    sessionStorage.removeItem('eee-auth')
+    location.reload()
+  }
+
+  function showPanel() {
+    document.getElementById('pin-gate').style.display = 'none'
+    document.getElementById('main-panel').style.display = 'block'
+    document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0]
+    loadStats()
+    loadHistory()
+  }
+
+  if (sessionStorage.getItem('eee-auth') === '1') showPanel()
+
+  // ── Toast ──
+  let toastTimer
+  function toast(msg, icon = '✅') {
+    const el = document.getElementById('toast')
+    document.getElementById('toast-msg').textContent = msg
+    document.getElementById('toast-icon').textContent = icon
+    el.classList.add('show')
+    clearTimeout(toastTimer)
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3200)
+  }
+
+  // ── Photo upload ──
+  async function handlePhotoUpload(type) {
+    const input = document.getElementById(`input-foto-${type}`)
+    const file = input.files[0]
+    if (!file) return
+
+    const preview = document.getElementById(`preview-${type}`)
+    const nameEl = document.getElementById(`name-foto-${type}`)
+    const spinner = document.getElementById(`spin-${type}`)
+    const zona = document.getElementById(`zona-${type}`)
+    const urlInput = document.getElementById(`url-foto-${type}`)
+
+    // Local preview
+    const reader = new FileReader()
+    reader.onload = e => {
+      preview.src = e.target.result
+      preview.classList.add('visible')
+    }
+    reader.readAsDataURL(file)
+
+    spinner.style.display = 'block'
+    nameEl.textContent = ''
+
+    const ext = file.name.split('.').pop()
+    const filename = `${type}-${Date.now()}.${ext}`
+
+    const { data, error } = await db.storage.from(BUCKET).upload(filename, file, { upsert: true })
+
+    spinner.style.display = 'none'
+
+    if (error) {
+      toast('Error al subir la foto. Intenta de nuevo.', '❌')
+      return
+    }
+
+    const { data: { publicUrl } } = db.storage.from(BUCKET).getPublicUrl(filename)
+    urlInput.value = publicUrl
+    nameEl.textContent = file.name
+    zona.classList.add('has-photo')
+    toast(`Foto ${type === 'cliente' ? 'del cliente' : 'del carro'} subida ✓`, '📷')
+  }
+
+  // ── Save delivery ──
+  async function saveDelivery(e) {
+    e.preventDefault()
+    const btn = document.getElementById('btn-save')
+    btn.disabled = true
+    btn.textContent = 'Publicando...'
+
+    const payload = {
+      cliente_nombre: document.getElementById('f-nombre').value.trim(),
+      tratamiento:    document.getElementById('f-tratamiento').value,
+      marca:          document.getElementById('f-marca').value,
+      modelo:         document.getElementById('f-modelo').value.trim(),
+      año:            document.getElementById('f-año').value.trim(),
+      color:          document.getElementById('f-color').value.trim(),
+      placa:          document.getElementById('f-placa').value.trim().toUpperCase(),
+      fecha_entrega:  document.getElementById('f-fecha').value,
+      notas:          document.getElementById('f-notas').value.trim(),
+      foto_cliente_url: document.getElementById('url-foto-cliente').value,
+      foto_carro_url:   document.getElementById('url-foto-carro').value,
+      activa: true,
+    }
+
+    const { error } = await db.from('eee_entregas').insert(payload)
+
+    btn.disabled = false
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg> Publicar como entrega activa'
+
+    if (error) {
+      toast('Error al guardar. Revisa la consola.', '❌')
+      console.error(error)
+      return
+    }
+
+    toast(`Entrega de ${payload.tratamiento} ${payload.cliente_nombre} publicada 🎉`, '🏆')
+    resetForm()
+    loadStats()
+    loadHistory()
+  }
+
+  function resetForm() {
+    document.getElementById('delivery-form').reset()
+    document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0]
+    ;['cliente', 'carro'].forEach(t => {
+      document.getElementById(`preview-${t}`).classList.remove('visible')
+      document.getElementById(`preview-${t}`).src = ''
+      document.getElementById(`name-foto-${t}`).textContent = ''
+      document.getElementById(`url-foto-${t}`).value = ''
+      document.getElementById(`zona-${t}`).classList.remove('has-photo')
+    })
+  }
+
+  // ── Stats ──
+  async function loadStats() {
+    const { data } = await db.from('eee_entregas').select('id, activa, created_at')
+    if (!data) return
+
+    const now = new Date()
+    const thisMonth = data.filter(d => {
+      const dd = new Date(d.created_at)
+      return dd.getMonth() === now.getMonth() && dd.getFullYear() === now.getFullYear()
+    })
+    const active = data.filter(d => d.activa)
+
+    document.getElementById('stat-total').textContent = data.length
+    document.getElementById('stat-month').textContent = thisMonth.length
+    document.getElementById('stat-active').textContent = active.length ? active[0] && '1' : '0'
+  }
+
+  // ── History ──
+  async function loadHistory() {
+    const container = document.getElementById('history-container')
+    const { data, error } = await db.from('eee_entregas')
+      .select('*').order('created_at', { ascending: false })
+
+    if (error || !data) {
+      container.innerHTML = '<div class="loading-text">Error al cargar historial.</div>'
+      return
+    }
+
+    document.getElementById('hist-count').textContent = `${data.length} registro${data.length !== 1 ? 's' : ''}`
+
+    if (data.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <p style="font-size:14px;color:#64748B">No hay entregas registradas aún.<br/>Crea la primera desde el formulario.</p>
+        </div>`
+      return
+    }
+
+    const rows = data.map(d => {
+      const fecha = new Date(d.fecha_entrega + 'T12:00:00').toLocaleDateString('es-VE', { day:'2-digit', month:'short', year:'numeric' })
+      const nombre = `${d.tratamiento || ''} ${d.cliente_nombre}`.trim()
+      const vehiculo = `${d.marca} ${d.modelo}${d.año ? ' ' + d.año : ''}${d.color ? ' · ' + d.color : ''}`
+
+      const avatar = d.foto_cliente_url
+        ? `<img src="${d.foto_cliente_url}" class="client-thumb" />`
+        : `<div class="client-thumb-placeholder">${d.cliente_nombre.charAt(0).toUpperCase()}</div>`
+
+      const badge = d.activa
+        ? `<span class="badge-active">Activa</span>`
+        : `<span class="badge-inactive">Completada</span>`
+
+      return `
+        <tr>
+          <td>${fecha}</td>
+          <td style="display:flex;align-items:center;gap:10px">${avatar}<div><div style="font-weight:600;color:#fff">${nombre}</div><div style="font-size:11px;color:#64748B">${d.placa || ''}</div></div></td>
+          <td><div style="color:#fff">${vehiculo}</div>${badge}</td>
+          <td>
+            <div class="td-actions">
+              ${!d.activa ? `<button class="btn btn-activate btn-sm" onclick="activateEntry('${d.id}')">Activar</button>` : ''}
+              <button class="btn btn-danger btn-sm" onclick="deleteEntry('${d.id}')">Eliminar</button>
+            </div>
+          </td>
+        </tr>`
+    }).join('')
+
+    container.innerHTML = `
+      <div style="overflow-x:auto">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Vehículo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`
+  }
+
+  async function activateEntry(id) {
+    await db.from('eee_entregas').update({ activa: true }).eq('id', id)
+    toast('Entrega activada en pantalla', '✅')
+    loadStats()
+    loadHistory()
+  }
+
+  async function deleteEntry(id) {
+    if (!confirm('¿Eliminar esta entrega del historial?')) return
+    await db.from('eee_entregas').delete().eq('id', id)
+    toast('Entrega eliminada', '🗑️')
+    loadStats()
+    loadHistory()
+  }
+</script>
+</body>
+</html>

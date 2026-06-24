@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pantalla EEE · La Oriental Automotors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      background: #070A12;
+      font-family: 'Inter', sans-serif;
+      color: #E2E8F0;
+      overflow: hidden;
+    }
+
+    /* ── Grain ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025; pointer-events: none;
+    }
+
+    /* ── Glows ── */
+    .glow {
+      position: fixed; border-radius: 50%;
+      filter: blur(120px); pointer-events: none; z-index: 0;
+    }
+
+    /* ── Screens ── */
+    .screen {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity 0.8s ease;
+      pointer-events: none;
+    }
+    .screen.active { opacity: 1; pointer-events: auto; }
+
+    /* ══════════════════════════
+       SCREEN: STANDBY
+    ══════════════════════════ */
+    #screen-standby {
+      flex-direction: column; gap: 24px; text-align: center;
+    }
+    .standby-logo {
+      width: 80px; height: 80px; border-radius: 24px;
+      background: linear-gradient(135deg, #C8973A, #9A6D1F);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px; font-weight: 900; color: #070A12;
+      margin: 0 auto 8px;
+      box-shadow: 0 0 60px rgba(200,151,58,0.3);
+    }
+    .standby-title {
+      font-size: clamp(28px,4vw,52px); font-weight: 900; color: #fff;
+      letter-spacing: -0.02em;
+    }
+    .standby-sub {
+      font-size: clamp(13px,1.4vw,18px); color: #475569; margin-top: 8px;
+    }
+    .standby-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(200,151,58,0.08); border: 1px solid rgba(200,151,58,0.25);
+      color: #C8973A; border-radius: 50px; padding: 8px 20px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .standby-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: #C8973A;
+      animation: pulse 2s infinite;
+    }
+    .standby-clock {
+      font-size: clamp(48px,8vw,96px); font-weight: 900;
+      background: linear-gradient(135deg, #E8B96A, #C8973A);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; letter-spacing: -0.04em; line-height: 1;
+    }
+    .standby-date {
+      font-size: clamp(14px,1.5vw,20px); color: #64748B;
+      text-transform: capitalize; letter-spacing: 0.05em;
+    }
+
+    /* ══════════════════════════
+       SCREEN: DELIVERY
+    ══════════════════════════ */
+    #screen-delivery {
+      flex-direction: column;
+      padding: 40px;
+      gap: 0;
+    }
+
+    /* Background car photo */
+    #bg-car-photo {
+      position: fixed; inset: 0; z-index: -1;
+      background-size: cover; background-position: center;
+      transition: background-image 0.6s ease;
+    }
+    #bg-car-overlay {
+      position: fixed; inset: 0; z-index: 1;
+      background: linear-gradient(
+        135deg,
+        rgba(7,10,18,0.95) 0%,
+        rgba(7,10,18,0.80) 40%,
+        rgba(7,10,18,0.65) 70%,
+        rgba(7,10,18,0.92) 100%
+      );
+    }
+
+    .delivery-inner {
+      position: relative; z-index: 10;
+      width: 100%; max-width: 1400px;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 60px;
+      align-items: center;
+    }
+
+    /* Left: text content */
+    .delivery-left { }
+
+    .felicidades-label {
+      font-size: clamp(11px,1vw,14px); font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: #C8973A; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .felicidades-label::before {
+      content: ''; display: block;
+      width: 40px; height: 1px;
+      background: linear-gradient(to right, #C8973A, transparent);
+    }
+
+    .delivery-name {
+      font-size: clamp(36px,5.5vw,88px);
+      font-weight: 900; color: #fff;
+      line-height: 1.0; letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+    .delivery-tratamiento {
+      font-size: clamp(14px,1.5vw,22px);
+      color: #94A3B8; font-weight: 500;
+      margin-bottom: 32px;
+    }
+
+    /* Car details */
+    .car-chips {
+      display: flex; flex-wrap: wrap; gap: 10px;
+      margin-bottom: 40px;
+    }
+    .car-chip {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50px; padding: 8px 18px;
+      font-size: clamp(12px,1vw,15px); color: #CBD5E1; font-weight: 600;
+    }
+    .car-chip.highlight {
+      background: rgba(200,151,58,0.1);
+      border-color: rgba(200,151,58,0.3);
+      color: #E8B96A;
+    }
+
+    /* Brand badges */
+    .brand-row {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .brand-badge {
+      padding: 8px 20px; border-radius: 10px;
+      font-size: 13px; font-weight: 900; letter-spacing: 0.1em;
+    }
+    .brand-mg {
+      background: rgba(217,28,36,0.1); border: 1px solid rgba(217,28,36,0.3);
+      color: #FF4B55;
+    }
+    .brand-maxus {
+      background: rgba(13,37,87,0.3); border: 1px solid rgba(26,58,124,0.5);
+      color: #8EAACB;
+    }
+    .brand-lo {
+      background: rgba(200,151,58,0.08); border: 1px solid rgba(200,151,58,0.2);
+      color: #C8973A; font-size: 11px; letter-spacing: 0.15em;
+    }
+
+    /* Right: client photo */
+    .delivery-right {
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+    }
+    .client-photo-wrap {
+      position: relative;
+    }
+    .client-photo-ring {
+      position: absolute; inset: -8px; border-radius: 50%;
+      background: linear-gradient(135deg, #E8B96A, #C8973A, #9A6D1F, #E8B96A);
+      animation: spin 6s linear infinite;
+      opacity: 0.7;
+    }
+    .client-photo-mask {
+      position: absolute; inset: -4px; border-radius: 50%;
+      background: #070A12;
+    }
+    #client-photo {
+      width: clamp(200px,22vw,320px); height: clamp(200px,22vw,320px);
+      border-radius: 50%; object-fit: cover; object-position: top center;
+      position: relative; z-index: 2;
+      display: block;
+    }
+    .client-photo-initials {
+      width: clamp(200px,22vw,320px); height: clamp(200px,22vw,320px);
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(200,151,58,0.15), rgba(200,151,58,0.05));
+      border: 2px solid rgba(200,151,58,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: clamp(60px,8vw,100px); font-weight: 900;
+      color: #C8973A; position: relative; z-index: 2;
+    }
+    .delivery-date-badge {
+      background: rgba(7,10,18,0.8);
+      border: 1px solid rgba(200,151,58,0.25);
+      border-radius: 50px; padding: 10px 24px;
+      text-align: center;
+    }
+    .delivery-date-label { font-size: 10px; color: #64748B; letter-spacing: 0.12em; text-transform: uppercase; }
+    .delivery-date-val { font-size: 16px; font-weight: 700; color: #fff; margin-top: 2px; }
+
+    /* Bottom bar */
+    .delivery-footer {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 20;
+      padding: 20px 40px;
+      background: linear-gradient(to top, rgba(7,10,18,0.95) 0%, transparent 100%);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-lo {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .footer-logo-mark {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: linear-gradient(135deg, #C8973A, #9A6D1F);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 900; color: #070A12;
+    }
+    .footer-brand { font-size: 13px; font-weight: 700; color: #fff; }
+    .footer-sub { font-size: 11px; color: #475569; }
+    .footer-right { font-size: 11px; color: #334155; }
+
+    /* ── Animations ── */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .anim { animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .anim-d1 { animation-delay: 0.1s; }
+    .anim-d2 { animation-delay: 0.25s; }
+    .anim-d3 { animation-delay: 0.4s; }
+    .anim-d4 { animation-delay: 0.55s; }
+    .anim-d5 { animation-delay: 0.7s; }
+
+    /* ── Refresh indicator ── */
+    #refresh-bar {
+      position: fixed; bottom: 0; left: 0; height: 2px; z-index: 100;
+      background: linear-gradient(to right, #C8973A, #E8B96A);
+      width: 0%; transition: width 30s linear;
+    }
+    #refresh-bar.running { width: 100%; }
+  </style>
+</head>
+<body>
+
+<!-- Glows -->
+<div class="glow" style="width:600px;height:600px;background:#D91C24;top:-200px;left:-200px;opacity:0.08;"></div>
+<div class="glow" style="width:500px;height:500px;background:#0D2557;bottom:-150px;right:-100px;opacity:0.12;"></div>
+<div class="glow" style="width:400px;height:400px;background:#C8973A;top:40%;right:30%;opacity:0.05;"></div>
+
+<!-- Car background -->
+<div id="bg-car-photo"></div>
+<div id="bg-car-overlay"></div>
+
+<!-- Refresh bar -->
+<div id="refresh-bar"></div>
+
+<!-- ══ STANDBY SCREEN ══ -->
+<div class="screen active" id="screen-standby">
+  <div style="text-align:center">
+    <div class="standby-logo">LO</div>
+    <div class="standby-clock" id="standby-clock">00:00</div>
+    <div class="standby-date" id="standby-date">—</div>
+    <div style="margin-top:32px">
+      <div class="standby-badge">
+        <div class="standby-badge-dot"></div>
+        Experiencia Exclusiva Ejecutiva
+      </div>
+    </div>
+    <div class="standby-title" style="margin-top:24px">
+      La Oriental <span style="background:linear-gradient(135deg,#E8B96A,#C8973A);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Automotors</span>
+    </div>
+    <div class="standby-sub">MG · MAXUS · Maturín, Venezuela</div>
+  </div>
+</div>
+
+<!-- ══ DELIVERY SCREEN ══ -->
+<div class="screen" id="screen-delivery">
+  <div class="delivery-inner">
+
+    <!-- Left -->
+    <div class="delivery-left">
+      <div class="felicidades-label anim anim-d1">
+        Felicidades
+      </div>
+
+      <div id="d-tratamiento" class="delivery-tratamiento anim anim-d2"></div>
+      <div id="d-nombre" class="delivery-name anim anim-d3">—</div>
+
+      <div class="car-chips anim anim-d4" id="d-chips"></div>
+
+      <div class="brand-row anim anim-d5" id="d-brands">
+        <div class="brand-badge brand-lo">La Oriental Automotors</div>
+      </div>
+    </div>
+
+    <!-- Right: photo -->
+    <div class="delivery-right anim anim-d3">
+      <div class="client-photo-wrap" id="photo-wrap">
+        <div class="client-photo-ring"></div>
+        <div class="client-photo-mask"></div>
+        <img id="client-photo" src="" alt="" style="display:none" />
+        <div id="client-initials" class="client-photo-initials">?</div>
+      </div>
+
+      <div class="delivery-date-badge" id="d-date-badge">
+        <div class="delivery-date-label">Fecha de entrega</div>
+        <div class="delivery-date-val" id="d-fecha">—</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="delivery-footer">
+    <div class="footer-lo">
+      <div class="footer-logo-mark">LO</div>
+      <div>
+        <div class="footer-brand">La Oriental Automotors</div>
+        <div class="footer-sub">Maturín, Venezuela · MG & MAXUS</div>
+      </div>
+    </div>
+    <div class="footer-right" id="footer-right">EEE · Experiencia Exclusiva Ejecutiva</div>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://twrskadsskiiskrqdvaj.supabase.co'
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3cnNrYWRzc2tpaXNrcnFkdmFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NTU4MjcsImV4cCI6MjA5NDEzMTgyN30.XGzVDHBb06cDDhWWt7t-BJ-iczneQC3CS-aM1NhUttU'
+
+  const { createClient } = supabase
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+  let currentId = null
+
+  // ── Clock ──
+  function updateClock() {
+    const now = new Date()
+    const hh = String(now.getHours()).padStart(2,'0')
+    const mm = String(now.getMinutes()).padStart(2,'0')
+    document.getElementById('standby-clock').textContent = `${hh}:${mm}`
+
+    const fecha = now.toLocaleDateString('es-VE', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
+    document.getElementById('standby-date').textContent = fecha.charAt(0).toUpperCase() + fecha.slice(1)
+  }
+  updateClock()
+  setInterval(updateClock, 1000)
+
+  // ── Load active delivery ──
+  async function loadDelivery() {
+    const { data } = await db.from('eee_entregas')
+      .select('*').eq('activa', true).limit(1).maybeSingle()
+
+    if (!data) {
+      showStandby()
+      return
+    }
+
+    if (data.id === currentId) return // no change
+    currentId = data.id
+
+    renderDelivery(data)
+  }
+
+  function showStandby() {
+    document.getElementById('screen-delivery').classList.remove('active')
+    document.getElementById('screen-standby').classList.add('active')
+    document.getElementById('bg-car-photo').style.backgroundImage = ''
+    currentId = null
+  }
+
+  function renderDelivery(d) {
+    // Switch screen
+    document.getElementById('screen-standby').classList.remove('active')
+    document.getElementById('screen-delivery').classList.add('active')
+
+    // Background car photo
+    if (d.foto_carro_url) {
+      document.getElementById('bg-car-photo').style.backgroundImage = `url('${d.foto_carro_url}')`
+    } else {
+      document.getElementById('bg-car-photo').style.backgroundImage = ''
+    }
+
+    // Name
+    document.getElementById('d-tratamiento').textContent = d.tratamiento || ''
+    document.getElementById('d-nombre').textContent = d.cliente_nombre || ''
+
+    // Initials or photo
+    const photoEl = document.getElementById('client-photo')
+    const initialsEl = document.getElementById('client-initials')
+    if (d.foto_cliente_url) {
+      photoEl.src = d.foto_cliente_url
+      photoEl.style.display = 'block'
+      initialsEl.style.display = 'none'
+    } else {
+      photoEl.style.display = 'none'
+      initialsEl.style.display = 'flex'
+      initialsEl.textContent = (d.cliente_nombre || '?').charAt(0).toUpperCase()
+    }
+
+    // Car chips
+    const chips = []
+    if (d.marca)  chips.push({ text: d.marca, highlight: true })
+    if (d.modelo) chips.push({ text: d.modelo, highlight: true })
+    if (d.año)    chips.push({ text: d.año })
+    if (d.color)  chips.push({ text: d.color })
+    if (d.placa)  chips.push({ text: d.placa })
+
+    document.getElementById('d-chips').innerHTML = chips.map(c =>
+      `<div class="car-chip${c.highlight ? ' highlight' : ''}">${c.text}</div>`
+    ).join('')
+
+    // Brand
+    const brandHtml = `
+      <div class="brand-badge ${d.marca === 'MAXUS' ? 'brand-maxus' : 'brand-mg'}">${d.marca || 'MG'}</div>
+      <div class="brand-badge brand-lo">La Oriental Automotors</div>
+    `
+    document.getElementById('d-brands').innerHTML = brandHtml
+
+    // Date
+    if (d.fecha_entrega) {
+      const fd = new Date(d.fecha_entrega + 'T12:00:00').toLocaleDateString('es-VE', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      })
+      document.getElementById('d-fecha').textContent = fd.charAt(0).toUpperCase() + fd.slice(1)
+    }
+  }
+
+  // ── Auto-refresh every 30 seconds ──
+  function startRefreshBar() {
+    const bar = document.getElementById('refresh-bar')
+    bar.style.transition = 'none'
+    bar.style.width = '0%'
+    requestAnimationFrame(() => {
+      bar.style.transition = 'width 30s linear'
+      bar.style.width = '100%'
+    })
+  }
+
+  loadDelivery()
+  startRefreshBar()
+
+  setInterval(() => {
+    loadDelivery()
+    startRefreshBar()
+  }, 30000)
+</script>
+</body>
+</html>

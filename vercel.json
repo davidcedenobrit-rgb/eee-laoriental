@@ -1,12 +1,15 @@
 {
   "version": 2,
   "builds": [
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "entrega.html", "use": "@vercel/static" }
+    { "src": "index.html",    "use": "@vercel/static" },
+    { "src": "entrega.html",  "use": "@vercel/static" },
+    { "src": "admin.html",    "use": "@vercel/static" },
+    { "src": "pantalla.html", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/entrega", "dest": "/entrega.html" },
-    { "src": "/entrega.html", "dest": "/entrega.html" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    { "src": "/entrega",   "dest": "/entrega.html"  },
+    { "src": "/admin",     "dest": "/admin.html"    },
+    { "src": "/pantalla",  "dest": "/pantalla.html" },
+    { "src": "/(.*)",      "dest": "/index.html"    }
   ]
 }
