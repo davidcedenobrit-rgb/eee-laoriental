@@ -278,9 +278,9 @@
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
-      <a href="/pantalla" target="_blank" class="preview-link">
+      <a href="/entrega" target="_blank" class="preview-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        Ver pantalla
+        Ver entrega
       </a>
       <button onclick="logout()" class="btn btn-outline btn-sm">Salir</button>
     </div>
@@ -372,7 +372,6 @@
               <textarea id="f-notas" placeholder="Observaciones, detalles especiales..."></textarea>
             </div>
 
-
             <!-- Foto carro -->
             <div class="form-group">
               <label>Foto del vehículo</label>
@@ -418,8 +417,8 @@
 </div>
 
 <script>
-  const SUPABASE_URL = 'https://kxhdqbbcattholltloux.supabase.co'
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4aGRxYmJjYXR0aG9sbHRsb3V4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNjIyNjUsImV4cCI6MjA4ODYzODI2NX0.CBHhMQyC-8wzLsxp8xVddWYOYpE04Tdz7FjtL_uQGwk'
+  const SUPABASE_URL = 'https://twrskadsskiiskrqdvaj.supabase.co'
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR3cnNrYWRzc2tpaXNrcnFkdmFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NTU4MjcsImV4cCI6MjA5NDEzMTgyN30.XGzVDHBb06cDDhWWt7t-BJ-iczneQC3CS-aM1NhUttU'
   const PIN = '2025'
   const BUCKET = 'eee-fotos'
 
@@ -525,6 +524,7 @@
       placa:          document.getElementById('f-placa').value.trim().toUpperCase(),
       fecha_entrega:  document.getElementById('f-fecha').value,
       notas:          document.getElementById('f-notas').value.trim(),
+      foto_cliente_url: document.getElementById('url-foto-cliente').value,
       foto_carro_url:   document.getElementById('url-foto-carro').value,
       activa: true,
     }
@@ -549,7 +549,7 @@
   function resetForm() {
     document.getElementById('delivery-form').reset()
     document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0]
-    ;['carro'].forEach(t => {
+    ;['cliente', 'carro'].forEach(t => {
       document.getElementById(`preview-${t}`).classList.remove('visible')
       document.getElementById(`preview-${t}`).src = ''
       document.getElementById(`name-foto-${t}`).textContent = ''
